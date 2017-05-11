@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+zshrc=~/.zshrc
+zsh_dir=~/.zsh
+
+zsh_dir_source=${0:a:h}  # dir of this file -- see zshexpn(1)
+zsh_dir_source=${zsh_dir_source##${HOME:a}/}  # make it relative to $HOME
+zshrc_source=${zsh_dir_source}/zshrc
+
+datestamp=$(date -u +%Y%m%dT%H%M%SZ)
+
+if [[ -f ${zshrc} || -L ${zshrc} ]]; then
+  zshrc_backup="${zshrc}.${datestamp}"
+
+  mv "${zshrc}" "${zshrc_backup}"
+  echo "Old ${zshrc} backed up as ${zshrc_backup}"
+fi
+ln -s "${zshrc_source}" "${zshrc}"
+
+if [[ ${zsh_dir:a} != ${zsh_dir_source} ]]; then
+  # zsh configuration repository was NOT cloned to '~/.zsh'
+  # We need to also make symlink for '~/.zsh'
+  if [[ -d ${zsh_dir} || -L {zsh_dir} ]]; then
+    zsh_dir_backup="${zsh_dir}.${datestamp}"
+
+    mv "${zsh_dir}" "${zsh_dir_backup}"
+    echo "Old ${zsh_dir} backed up as ${zsh_dir_backup}"
+  fi
+  ln -s "${zsh_dir_source}" "${zsh_dir}"
+fi

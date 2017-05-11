@@ -1,0 +1,35 @@
+# -*- mode: sh -*-
+# vim: ft=sh
+
+prompt_bdd_setup() {
+  colorize_by_os() {
+    local color
+    case "${OSTYPE}" in
+      darwin*) color="red"    ;;
+      linux*)  color="green"  ;;
+      *)       color="yellow" ;;
+    esac
+
+    echo "%F{${color}}$*%f"
+  }
+
+  PS1="%~$(colorize_by_os '%#') "
+
+  # Notice ternary expression: %(var.true-text.false-text).
+  # Exit status (%?) is rendered when $? is false/non-zero.
+  RPROMPT="%F{red}%(?..%?)%f"
+
+  if [[ $# -gt 0 ]]; then
+    case $1 in
+      norprompt) unset RPROMPT; shift ;;
+      rprompt-time) RPROMPT+=" %*"; shift ;;
+      rprompt-hom) RPROMPT+=" %M ${OSTYPE} ${MACHTYPE}"; shift ;;
+    esac
+
+    if [[ $# -gt 0 ]]; then
+      PS1="$1:${PS1}"
+    fi
+  fi
+}
+
+prompt_bdd_setup "$@"

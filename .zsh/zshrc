@@ -1,0 +1,107 @@
+### zshoptions(1) ##############################################################
+# Chaging Directories
+setopt auto_cd               # if not a command but a dir name, cd into it
+setopt auto_pushd            # cd pushes old dir onto dir stack
+setopt pushd_ignore_dups     # ...but don't allow dupes in the stack
+
+# Completion
+setopt complete_in_word      # complete in word from both sides
+setopt list_packed           # print matches in columns to occupy less lines.
+
+# Expansion and Globbing
+setopt bad_pattern           # if a pattern is badly formed, print an error
+setopt nomatch               # if a pattern has no matches, print an error
+#setopt glob_star_short       # '**/*.c' can be abbrev'd as '**.c'
+setopt magic_equal_subst     # always filename expand expression after equals (e.g. foo=~bar/a[...])
+setopt mark_dirs             # append a trailing '/' to dir names from globbing.
+
+# History
+setopt extended_history      # save cmd's begin timestamp and duration
+setopt hist_fcntl_lock       # use fcntl(2) to lock the HISTFILE
+setopt hist_ignore_all_dups  # no dupes in history
+setopt hist_ignore_space     # ignore commands with leading spaces
+setopt hist_reduce_blanks    # tidy up commands before saving to history
+setopt share_history
+
+# Input/Output
+setopt correct               # try to correct the spelling of commands
+setopt interactive_comments  # allow comments for interactive shells
+
+# Job Control
+setopt auto_continue         # send SIGCONT to stopped jobs after disown
+
+# Prompting
+setopt prompt_subst          # parameter expansion, cmd subst & arith exprs in prompt
+setopt transient_rprompt     # remove RPROMPT when accepting command so doesn't show up in copy paste
+
+# ZLE
+setopt no_beep               # no beeping at all
+
+### ALIASES ####################################################################
+# Global Aliases
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+alias -g G='| grep -F'
+alias -g L='| less -RS'
+alias -g S='| sort'
+alias -g WC='| wc -l'
+
+# Command Aliases
+alias h=history
+alias ls='ls -FG' # BSD ls -- with colors
+alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
+
+### KEY BINDINGS ###############################################################
+bindkey -e # Emacs key bindings
+bindkey '^G' pound-insert
+
+### ENVIRONMENT VARIABLES ######################################################
+HISTSIZE=2000
+SAVEHIST=2000
+HISTFILE=~/.history
+WORDCHARS=${WORDCHARS:s,/,,} # Remove '/' from WORDCHARS so path components are treated like words.
+
+# LS_COLORS Generator: http://geoff.greer.fm/lscolors/
+# BSD: LSCOLORS | Linux: LS_COLORS
+export LSCOLORS=exfxcxdxbxegedabagacad
+export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+
+# Pick the available EDITOR in order of preference.
+# For commands found, `whence` will print out the resolved paths or value of alias or function name.
+# Remember: "Ed is the standard text editor." --ed(1)
+export EDITOR=$(whence vim vi ed | head -n 1)
+
+### MISC #######################################################################
+# Prompt Themes
+fpath=(~/.zsh/prompts $fpath)
+autoload -Uz promptinit; promptinit
+prompt ${prompt_themes[(r)bdd]-off}  # if exists load 'bdd' theme or else turn themes off.
+
+# Completion
+autoload -Uz compinit; compinit
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*' group-name ''
+
+# Use LSCOLORS on auto completion as well
+zmodload -i zsh/complist
+zstyle ':completion:*' list-colors ${(s.:.)LSCOLORS}
+
+# OS specific aliases and directory hashes
+if [[ $OSTYPE =~ darwin* ]]; then
+  alias -g CP='| pbcopy'
+
+  hash -d D=~/Desktop
+  hash -d d=~/Downloads
+  hash -d a=~/Applications
+  hash -d icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs
+elif [[ $OSTYPE =~ linux* ]]; then
+  alias ls='ls -F --color=auto'
+fi
+
+### ZSH RC Extensions ##########################################################
+function { local f; for f ($@) source $f } ~/.zsh/*.zsh(N) ~/.zshrc.local(N)
+################################################################################
