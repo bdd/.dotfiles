@@ -1,0 +1,20 @@
+# -*- mode: gitignore; -*- vim: set ft=gitignore:
+#
+# Consider adding language/project specific ignores directly to repo.
+# A good set of templatest at https://github.com/github/gitignore
+
+# vim
+*.sw[op]
+
+# emacs
+*~
+\#*\#
+*.elc
+
+# c
+*.[ao]
+*.so
+*.dylib
+
+# python
+*.py[cdo]

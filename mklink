@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -eu -o pipefail
+#set -x
+
+backup_and_link() {
+  local source=$1
+  local target=$2
+  local __dry_run="${DRYRUN+echo dryrun-would-exec:}"
+
+  if [[ -L ${target} || -f ${target} || -d ${target} ]]; then
+    # If already a symlink to desired source, we're done.
+    [[ -L ${target} && $(readlink "${target}") == "${source}" ]] && return
+
+    datestamp=${datestamp:-$(date -u +%Y%m%dT%H%M%SZ)}  # cached
+    local backup="${target}.bak.${datestamp}"
+    echo "Old ${target} backed up as ${backup}" >&2
+    ${__dry_run} mv "${target}" "${backup}"
+  fi
+
+  ${__dry_run} ln -s "${source}" "${target}"
+}
+
+link() {
+  local source target
+
+  source="${HERE}/$1"
+
+  if [[ $# -eq 1 ]]; then
+    target="${HOME}/$1"
+  else
+    target="${HOME}/$2"
+  fi
+
+  backup_and_link "${source}" "${target}"
+}
+
+link:dotfiles() {
+  local source target
+
+  for dotfile in $(find ${HERE} -type f -name 'dot.*' -depth 1); do
+    source="${dotfile}"
+    target="$(basename "${dotfile}")"
+    target="${HOME}/${target##dot}"
+    backup_and_link "${source}" "${target}"
+  done
+}
+
+link:dotconfig() {
+  local source target
+
+  [[ -d ${HOME}/.config ]] || mkdir "${HOME}/.config"
+
+  for dir in $(find ${HERE}/dot.config -type d -depth 1); do
+    source="${dir}"
+    target="${HOME}/.config/$(basename "${dir}")"
+    backup_and_link "${source}" "${target}"
+  done
+}
+
+link:all() {
+  link:dotfiles
+  link:dotconfig
+  link .zsh
+  link .vim
+  link .emacs.d
+}
+
+in_array() {
+  local arr e=$1
+  shift
+  for arr; do [[ ${arr} == "${e}" ]] && return 0; done
+  return 1
+}
+
+usage() {
+  echo "usage: $0 <file>|<dir>"
+  echo "       $0 <dotfiles|dotconfig|all>"
+  exit 64  # EX_USAGE
+}
+
+
+HERE=$(dirname "$(realpath -e $0)")
+PHONY=(all dotfiles dotconfig)
+
+[[ $# -lt 1 || $# -gt 2 ]] && usage
+
+if in_array "$1" "${PHONY[@]}"; then
+  link:$1
+elif [[ -d "${HERE}/$1" || -f "${HERE}/$1" ]]; then
+  link "$@"
+else
+  echo "${HERE}/$1: Not found" >&2
+  exit 66  # EX_NOINPUT
+fi

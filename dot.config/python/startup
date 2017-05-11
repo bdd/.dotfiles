@@ -1,0 +1,43 @@
+# -*- mode: python; -*- vim: set ft=python:
+
+# Intended to be pointed by $PYTHONSTARTUP environment variable.
+# Read before first prompt is displayed in interactive mode (REPL).
+
+from __future__ import print_function
+
+
+# readline
+try:
+    import readline
+except ImportError:
+    print("Cannot import `readline'")
+else:
+    # Completion
+    import rlcompleter
+    readline.parse_and_bind('tab: complete')
+
+    # History
+    import os
+    import atexit
+    histfile = os.path.expanduser('.python_history')
+    try:
+        readline.read_history_file(histfile)
+    except IOError:
+        pass
+    readline.set_history_length(1000)
+    atexit.register(readline.write_history_file, histfile)
+
+    del readline
+    del rlcompleter
+    del os
+    del atexit
+    del histfile
+
+
+# datetime
+import datetime
+from datetime import timedelta  # noqa: F401
+
+
+def now():
+    return datetime.datetime.now()

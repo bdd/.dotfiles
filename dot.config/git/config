@@ -1,0 +1,41 @@
+# -*- mode: gitconfig; indent-tabs-mode: t; -*- vim: set ft=gitconfig nolist noet:
+
+[user]
+	name = Berk D. Demir
+	email = bdd@mindcast.org
+[core]
+	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	excludesfile = ~/.gitignore
+	ignorecase = true
+[push]
+	default = upstream
+[color]
+	ui = auto
+[alias]
+	amend = commit --amend --no-edit
+	bl = blame
+	br = branch
+	ci = commit
+	cl = clone
+	co = checkout
+	cp = cherry-pick
+
+	# History in one line per commit. Now in Technicolor!
+	# Abbrv hash, author name (16 chars), commit message (wrapped at 72 chars)
+	ol = "!git log $1 --format='%C(auto)%h %<(16,trunc)%an %w(72,0,25)%s'"
+
+	pff = pull --ff-only --no-stat
+	pr = pull --rebase
+	rbc = rebase --continue
+	rbi = rebase --interactive
+	sh = show
+	st = status
+[diff]
+	renames = true
+	indentHeuristic = true
+[rebase]
+	autostash = true
+[help]
+	autocorrect = 1
+[commit]
+	verbose = true
