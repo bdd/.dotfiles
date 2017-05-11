@@ -1,0 +1,30 @@
+snippet ser
+	`strftime("%Y%m%d")`${1:00}
+snippet ttl
+	$TTL ${1:1d}
+snippet gen
+	$GENERATE ${1:start}-${2:stop} ${3:$} ${4:PTR} ${5:$}
+snippet A
+	${1:name} A ${2:ip}
+snippet AAAA
+	${1:name} AAAA ${2:ip6}
+snippet CNAME
+	${1:name} CNAME ${2:name}
+snippet NS
+	${1:name} NS ${2:name}
+snippet MX
+	${1:name} MX ${2:pref} ${3:name}
+snippet PTR
+	${1:octet} PTR ${2:name}
+snippet TXT
+	${1:name} TXT "${2:text}"
+snippet SRV
+	_${1:svc}._${2:proto} SRV ${3:pri} ${4:wei} ${5:port} ${6:name}
+snippet SOA
+	@ SOA ${1:ns1.example.com}. hostmaster.${2:example.com}. (
+	    `strftime("%Y%m%d")` ; serial
+	            ${3:3h} ; refresh
+	            ${4:1h} ; retry
+	            ${5:1w} ; expire
+	            ${6:5M} ; minimum (used as nxdomain ttl)
+	)

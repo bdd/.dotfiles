@@ -1,0 +1,6 @@
+tags
+tags-ja
+.netrwhist
+.viminfo
+plugged/
+autoload/plug.vim
