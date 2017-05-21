@@ -61,7 +61,7 @@ endif
 " }}}
 
 " Look & Feel {{{
-set relativenumber  " relative line numbers for lines above and below
+set number relativenumber  " line number for the current, relative for others
 set showcmd  " show last command
 set shortmess=a  " a=all, use all abbrv possible in messages
 set laststatus=2  " 2=always
