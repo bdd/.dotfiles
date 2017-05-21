@@ -59,9 +59,9 @@ link:dotconfig() {
 link:all() {
   link:dotfiles
   link:dotconfig
-  link .zsh
-  link .vim
-  link .emacs.d
+  link zsh .zsh
+  link vim .vim
+  link emacs.d .emacs.d
 }
 
 in_array() {
