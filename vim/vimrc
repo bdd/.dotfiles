@@ -23,7 +23,6 @@ if exists('g:loaded_plug')
     let g:ackprg = 'ag --vimgrep'
   endif
 
-  Plug 'scrooloose/nerdcommenter'
   Plug 'scrooloose/nerdtree'
   Plug 'scrooloose/syntastic'
   let g:syntastic_always_populate_loc_list = 1
@@ -32,6 +31,7 @@ if exists('g:loaded_plug')
   let g:syntastic_loc_list_height = 5  " use a smaller location list (default: 10)
   let g:syntastic_stl_format = '<Syntax: %e Err, %w Warn>'
 
+  Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-eunuch'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rsi'
