@@ -36,7 +36,7 @@ link() {
 link:dotfiles() {
   local source target
 
-  for dotfile in $(find ${HERE} -type f -name 'dot.*' -depth 1); do
+  for dotfile in $(find ${HERE} -mindepth 1 -maxdepth 1 -type f -name 'dot.*'); do
     source="${dotfile}"
     target="$(basename "${dotfile}")"
     target="${HOME}/${target##dot}"
@@ -49,7 +49,7 @@ link:dotconfig() {
 
   [[ -d ${HOME}/.config ]] || mkdir "${HOME}/.config"
 
-  for dir in $(find ${HERE}/dot.config -type d -depth 1); do
+  for dir in $(find ${HERE}/dot.config -mindepth 1 -maxdepth 1 -type d); do
     source="${dir}"
     target="${HOME}/.config/$(basename "${dir}")"
     backup_and_link "${source}" "${target}"
