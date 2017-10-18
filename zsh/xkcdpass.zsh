@@ -1,7 +1,8 @@
 # ZSH only
 xkcdpass () {
   local n=4 sep="space"
-  local opt pick capitalize=false
+  local opt capitalize=false
+  local passphrase
 
   while getopts cds opt; do
     case ${opt} in
@@ -27,10 +28,13 @@ xkcdpass () {
     local word=${XKCDPASS_WORDLIST[pick]}
 
     if ${capitalize}; then word=${(C)word}; fi
-    echo -n "${word}"
-    if [[ $i -lt $n ]]; then _xkcdpass:separator ${sep}; fi
+    passphrase+=${word}
+    if [[ $i -lt $n ]]; then
+      passphrase+=$(_xkcdpass:separator ${sep})
+    fi
   done
-  echo
+
+  printf "%s\n" ${passphrase}
 }
 
 _xkcdpass:separator () {
@@ -39,14 +43,14 @@ _xkcdpass:separator () {
 
   case "$1" in
     "digit")
-      echo -n $(( RANDOM % 10 ))
+      printf "%d" $(( RANDOM % 10 ))
       ;;
     "symbol")
       pick=$(( 1 + RANDOM % ${#symbols} )) # array index starts from 1
-      echo -n "${symbols[pick]}"
+      printf "%c" ${symbols[pick]}
       ;;
     *)
-      echo -n " "
+      printf " "
   esac
 }
 
