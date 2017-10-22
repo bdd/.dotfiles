@@ -4,7 +4,7 @@ function! s:PlistConvert(...)
   if executable('plutil')
     execute '%!plutil -convert ' . l:fmt . ' -o - %'
   else
-    echoerr "plutil not found"
+    echoerr 'plutil not found'
   endif
 endfunction
 
