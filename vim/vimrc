@@ -25,19 +25,20 @@ if exists('g:loaded_plug')
   endif
 
   Plug 'scrooloose/nerdtree'
-  Plug 'scrooloose/syntastic'
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_auto_loc_list = 2  " close loc list when no errors left
-  let g:syntastic_loc_list_height = 5  " use a smaller location list (default: 10)
-  let g:syntastic_stl_format = '<Syntax: %e Err, %w Warn>'
-
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-eunuch'
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rsi'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-unimpaired'
+
+  Plug 'w0rp/ale'
+  function! LinterStatus() abort
+    let l:c = ale#statusline#Count(bufnr(''))
+    let l:e = l:c.error + l:c.style_error
+    let l:w = l:c.warning + l:c.style_warning
+    return l:e + l:w > 0 ? printf('<Lint: %d Err, %d Warn>', l:e, l:w) : ''
+  endfunction
 
   call plug#end()
 endif
@@ -78,8 +79,8 @@ endif
 
 " Status Line
 let &statusline = '[%n] %<%F %m%r%w%y%='
-if exists('g:loaded_syntastic_plugin')
-  let &statusline .= '%#WarningMsg#%{SyntasticStatuslineFlag()}%*'
+if exists('g:loaded_ale')
+  let &statusline .= '%#WarningMsg#%{LinterStatus()}%*'
 endif
 let &statusline .= ' (%l,%c) %P of %L'
 " }}}
