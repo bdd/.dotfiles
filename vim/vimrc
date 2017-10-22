@@ -24,7 +24,6 @@ if exists('g:loaded_plug')
     let g:ackprg = 'ag --vimgrep'
   endif
 
-  Plug 'scrooloose/nerdtree'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-eunuch'
   Plug 'tpope/vim-fugitive'
