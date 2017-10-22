@@ -1,15 +1,16 @@
 if exists('g:loaded_install') | finish | endif
 let g:loaded_install = 1
 
-set nocompatible  " uses line continuation and other modern goodies
-
-let s:this_script_dir = expand("<sfile>:p:h")
+let s:this_script_dir = expand('<sfile>:p:h')
 let s:post_install_cmds = []
 
 function install#all()
   " Register the function to run post installation commands.
   " 'VimEnter' is after vimrc, '-c' args, creating windows and loading buffers.
-  autocmd VimEnter * call s:post_install()
+  augroup postinstall
+    autocmd!
+    autocmd VimEnter * call s:post_install()
+  augroup END
 
   " Installation tasks:
   call s:install_vim_plug()

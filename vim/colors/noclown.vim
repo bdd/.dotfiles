@@ -20,14 +20,14 @@ highlight clear
 if exists('syntax_on')
   syntax reset
 endif
-let g:colors_name = "noclown"
+let g:colors_name = 'noclown'
 
 " Terminals that don't support italics, resort to rendering them as standout.
 " For comments and other things we italicize, this can become annoying very
 " quickly.  We are going to ignore 'italic' attribute if the terminal doesn't
 " know about it.
 if (has('gui_running') ||
-      \ has('unix') && system('tput sitm') == "\e[3m")
+      \ has('unix') && system('tput sitm') ==# "\e[3m")
   let g:noclown_has_italics = 1
 endif
 
@@ -57,7 +57,7 @@ function! s:attr(...)
   if !exists('g:noclown_has_italics')
     " We're going to modify the list, so make a copy (a:* are immutable)
     let l:alist = copy(a:000)
-    call filter(l:alist, 'v:val != "italic"')
+    call filter(l:alist, "v:val !=# 'italic'")
   endif
 
   " l:attrs: comma separated 'l:alist' as string or if empty: 'NONE'
@@ -68,21 +68,21 @@ endfunction
 
 " Clear every attribute to NONE to avoid inheriting from default colorscheme.
 let s:hi_clear = {}
-for key in ['term', 'cterm', 'ctermfg', 'ctermbg', 'gui', 'guifg', 'guibg']
-  let s:hi_clear[key] = 'NONE'
+for s:key in ['term', 'cterm', 'ctermfg', 'ctermbg', 'gui', 'guifg', 'guibg']
+  let s:hi_clear[s:key] = 'NONE'
 endfor
 
 function! s:Defn(group, ...)
   let l:hi_dict = copy(s:hi_clear)
 
   " Merge attribute group definitions to main dictionary
-  for setting in a:000
-    call extend(l:hi_dict, setting)
+  for l:setting in a:000
+    call extend(l:hi_dict, l:setting)
   endfor
 
   let l:hi_expr = 'highlight ' . a:group  . ' '
   " Convert { k1: v1, k2: v2, ..., kn: vn} dictionary to 'k1=v1 k2=v2 ... kn=vn' string
-  let l:hi_expr .= join(map(items(l:hi_dict), 'join(v:val, "=")'), ' ')
+  let l:hi_expr .= join(map(items(l:hi_dict), "join(v:val, '=')"), ' ')
 
   execute l:hi_expr
 endfunction

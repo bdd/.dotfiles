@@ -38,7 +38,7 @@ the repository but a helper script bootstraps the latest version from GitHub to 
 Launch Vim as:
 
 ```
-% vim --cmd 'call install#all()'
+% vim -N --cmd 'call install#all()'
 ```
 
 

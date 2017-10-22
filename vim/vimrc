@@ -1,4 +1,5 @@
 set encoding=utf-8
+scriptencoding utf-8
 
 " vim-plug {{{
 silent! call plug#begin()
@@ -109,7 +110,7 @@ set hlsearch  " highlight previous search pattern
 set history=1000  " command and search pattern history
 
 " Key Mappings {{{
-let mapleader = "\<Space>"
+let g:mapleader = "\<Space>"
 
 " Normal Mode
 nnoremap ; :
@@ -158,7 +159,7 @@ function! SyntaxItem()
   endwhile
 
   return join(
-        \ map(l:chain, 'synIDattr(v:val, "name")'),
+        \ map(l:chain, "synIDattr(v:val, 'name')"),
         \ '->')
 endfunction
 " }}}
@@ -200,7 +201,7 @@ if has('autocmd')
 endif
 " }}}
 
-let $LOCALVIMRC = expand("~/.vimrc.local")
+let $LOCALVIMRC = expand('~/.vimrc.local')
 if filereadable($LOCALVIMRC) | source $LOCALVIMRC | endif
 
 " modeline:
