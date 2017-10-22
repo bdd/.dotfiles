@@ -115,8 +115,7 @@ let g:mapleader = "\<Space>"
 " Normal Mode
 nnoremap ; :
 nnoremap <Tab> %
-nmap <Leader>b :buffer<space>
-nmap <Leader><Leader> :buffers<CR>
+nmap <Leader><Leader> :call PreferCmd('Buffers', 'buffers')<CR>
 nmap <Leader>rc :split $MYVIMRC<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
 nmap <C-V>s :echo SyntaxItem()<CR>
@@ -161,6 +160,15 @@ function! SyntaxItem()
   return join(
         \ map(l:chain, "synIDattr(v:val, 'name')"),
         \ '->')
+endfunction
+
+function! PreferCmd(...)
+  " Execute the first argument that exists as a command.
+  for l:cmd in a:000
+    if exists(':' . l:cmd) == 2
+      return execute(l:cmd)
+    endif
+  endfor
 endfunction
 " }}}
 
