@@ -63,10 +63,10 @@ endif
 
 " Look & Feel {{{
 set number relativenumber  " line number for the current, relative for others
-set showcmd  " show last command
-set shortmess=a  " a=all, use all abbrv possible in messages
-set laststatus=2  " 2=always
-set scrolloff=5  " scroll edge offset (to keep some context)
+set showcmd                " show last command
+set shortmess=a            " a=all, use all abbrv possible in messages
+set laststatus=2           " 2=always
+set scrolloff=5            " scroll edge offset (to keep some context)
 set wildmenu wildmode=list:longest
 set list listchars=tab:»‧,trail:░,precedes:◄,extends:►,nbsp:‧
 
@@ -85,29 +85,29 @@ let &statusline .= ' (%l,%c) %P of %L'
 " }}}
 
 " Behavior {{{
-set autochdir  " change current directory to file in viewed buffer's
-set hidden  " don't close but hide the buffer when dismissed
-set splitbelow  " new window below when `split`
-set splitright  " new window right when `vsplit`
-set visualbell  " use visual bell instead of beeping
-set autoread  " automatically re-read unmodified buffer on file change
-set autowrite  " automatically save before :next, :make, :suspend, ...
+set autochdir                   " change current directory to file in viewed buffer's
+set hidden                      " don't close but hide the buffer when dismissed
+set splitbelow                  " new window below when `split`
+set splitright                  " new window right when `vsplit`
+set visualbell                  " use visual bell instead of beeping
+set autoread                    " automatically re-read unmodified buffer on file change
+set autowrite                   " automatically save before :next, :make, :suspend, ...
 set backspace=indent,eol,start  " backspace over everything
 
 " Indentation
-set expandtab  " spaces over tabs for indentation
+set expandtab      " spaces over tabs for indentation
 set softtabstop=2  " without wasting too much screen estate
-set shiftwidth=2  " shift equally to indentation
-set tabstop=8  " tabs are 8 chars for a good reason, keep it that way
-set autoindent  " always-be-indenting
-set copyindent  " copy the existing indenting behavior of file
+set shiftwidth=2   " shift equally to indentation
+set tabstop=8      " tabs are 8 chars for a good reason, keep it that way
+set autoindent     " always-be-indenting
+set copyindent     " copy the existing indenting behavior of file
 " }}}
 
 " Searching
 set ignorecase smartcase  " case insensitive search if there are no capital letters
-set incsearch  " incrementally move to match and highlight
-set hlsearch  " highlight previous search pattern
-set history=1000  " command and search pattern history
+set incsearch             " incrementally move to match and highlight
+set hlsearch              " highlight previous search pattern
+set history=1000          " command and search pattern history
 
 " Key Mappings {{{
 let g:mapleader = "\<Space>"
