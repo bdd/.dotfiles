@@ -7,13 +7,16 @@ if [[ $OSTYPE =~ darwin.* ]]; then
 
   export HOMEBREW_CASK_OPTS='--appdir=~/Applications'
 elif [[ $OSTYPE =~ linux.* ]] ; then
-  if [[ -d ~/.linuxbrew/bin ]]; then _has_brew=1; else return; fi
+  _linuxbrew_dir="/home/linuxbrew/.linuxbrew"
+  if [[ -d "${_linuxbrew_dir}" ]]; then _has_brew=1; else return; fi
 
-  _zsh_site_functions=~/.linuxbrew/completions/zsh
+  _zsh_site_functions="${_linuxbrew_dir}/completions/zsh"
 
-  export PATH="$HOME/.linuxbrew/bin:$PATH"
-  export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
-  export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
+  export PATH="${_linuxbrew_dir}/bin:$PATH"
+  export MANPATH="${_linuxbrew_dir}/share/man:$MANPATH"
+  export INFOPATH="${_linuxbrew_dir}/share/info:$INFOPATH"
+
+  unset _linuxbrew_dir
 fi
 
 
