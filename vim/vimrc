@@ -114,17 +114,10 @@ let g:mapleader = "\<Space>"
 
 " Normal Mode
 nnoremap ; :
-nnoremap <Tab> %
+nnoremap \ ;
 nmap <Leader><Leader> :call PreferCmd('Buffers', 'buffers')<CR>
-nmap <Leader>rc :split $MYVIMRC<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
-nmap <C-V>s :echo SyntaxItem()<CR>
-
-" Window Navigation
-nnoremap <C-H> <C-W>h
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-L> <C-W>l
+nmap <Leader>h :echo SyntaxItem()<CR>
 
 " Insert Mode
 " Use <CR> to select completion suggestion instead of <C-y>
