@@ -43,6 +43,23 @@ if exists('g:loaded_plug')
 endif
 " }}}
 
+" Extensions distributed with Vim {{{
+" matchit: Extend '%' to matching groups like 'if', 'else', 'endif'.
+if has('patch-7.4.1649')
+  packadd! matchit
+else
+  runtime macros/matchit.vim
+endif
+
+" ftplugin/man.vim: Render man pages in buffers with ':Man' command.
+let g:ft_man_open_mode = 'vert'
+runtime ftplugin/man.vim
+if exists(':Man')
+  " Make 'K' in normal mode also use ':Man' instead of shelling out.
+  set keywordprg=:Man
+endif
+" }}}
+
 " Terminal {{{
 set ttyfast  " send more chars instead of ins/del line cmds for smooth redraw
 set lazyredraw  " don't redraw while executing macros, register and cmds
