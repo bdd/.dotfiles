@@ -202,8 +202,7 @@ if has('autocmd')
     " Indentation
     autocmd FileType python setlocal sts=4 sw=4
     autocmd FileType make setlocal noet ts=4 sts=0 sw=0
-    autocmd FileType go setlocal nolist noet sts=0 sw=0
-    autocmd FileType gitconfig setlocal nolist noet sts=0 sw=0
+    autocmd FileType go,gitconfig,man setlocal nolist noet sts=0 sw=0
     autocmd FileType gitcommit setlocal spell
     autocmd FileType vim setlocal keywordprg=:help
     " Maps
