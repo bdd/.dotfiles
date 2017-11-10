@@ -144,13 +144,12 @@ inoremap <expr> <CR> pumvisible() ? '<C-y>' : '<CR>'
 " Utility Functions {{{
 function! Preserve(command)
   let l:saved_search = @/
-  let l:line = line('.')
-  let l:col = col('.')
+  let l:saved_winview = winsaveview()
 
   execute a:command
 
   let @/ = l:saved_search
-  call cursor(l:line, l:col)
+  call winrestview(l:saved_winview)
 endfunction
 
 function! SyntaxItem()
