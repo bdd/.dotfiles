@@ -177,3 +177,39 @@ call s:Defn('qfFileName', s:fg('fade'))
 "TabLineSel	tab pages line, active tab page label
 "VisualNOS	Visual mode selection when vim is "Not Owning the Selection".
 "		Only X11 Gui's |gui-x11| and |xterm-clipboard| supports this.
+
+"""
+" Highlight debugging helpers
+"""
+function! s:HighlightGroupChain()
+  " Return the names in syntax identifier chain for the symbol under cursor.
+  " Chain is a '->' delimited string of linked syntax identifier names from
+  " leaf to root.
+  let l:chain = []
+  let l:leaf_id = synID(line('.'), col('.'), 1)
+  let l:leaf_name = synIDattr(l:leaf_id, 'name')
+  let l:root_name = synIDattr(synIDtrans(l:leaf_id), 'name')
+
+  call add(l:chain, l:leaf_name)
+
+  while len(l:chain) < 10  " highlight group linking is prone to loops
+    redir => l:hi_output | execute 'silent! highlight ' . l:leaf_name | redir END
+    let l:matches = matchlist(l:hi_output, '\vxxx links to (\w+)$')
+    if len(l:matches) > 0
+      let l:leaf_name = l:matches[1]
+      call add(l:chain, l:leaf_name)
+    else
+      " highlight group doesn't link to anything. done following links.
+      break
+    endif
+  endwhile
+
+  if l:chain[-1] != l:root_name
+    call add(l:chain, '...')
+    call add(l:chain, l:root_name)
+  endif
+
+  return join(l:chain, '->')
+endfunction
+
+nmap <Plug>(noclown-echo-highlight-group-chain) :echo <SID>HighlightGroupChain()<CR>

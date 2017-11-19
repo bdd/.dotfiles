@@ -134,7 +134,7 @@ nnoremap ; :
 nnoremap \ ;
 nmap <Leader><Leader> :call PreferCmd('Buffers', 'buffers')<CR>
 nmap <silent> <Leader>/ :nohlsearch<CR>
-nmap <Leader>h :echo SyntaxItem()<CR>
+nmap <Leader>h <Plug>(noclown-echo-highlight-group-chain)
 
 " Insert Mode
 " Use <CR> to select completion suggestion instead of <C-y>
@@ -150,25 +150,6 @@ function! Preserve(command)
 
   let @/ = l:saved_search
   call winrestview(l:saved_winview)
-endfunction
-
-function! SyntaxItem()
-  " Return the names in syntax identifier chain for the symbol under cursor.
-  " Chain is a '->' delimited string of linked syntax identifier names from
-  " leaf to root.
-  let l:cur_sid = synID(line('.'), col('.'), 1)
-  let l:prev_sid = 0
-  let l:chain = []
-
-  while l:cur_sid != l:prev_sid
-    call add(l:chain, l:cur_sid)
-    let l:prev_sid = l:cur_sid
-    let l:cur_sid = synIDtrans(l:cur_sid)
-  endwhile
-
-  return join(
-        \ map(l:chain, "synIDattr(v:val, 'name')"),
-        \ '->')
 endfunction
 
 function! PreferCmd(...)
