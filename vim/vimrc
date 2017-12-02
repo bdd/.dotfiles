@@ -1,27 +1,87 @@
 set encoding=utf-8
 scriptencoding utf-8
 
-" vim-plug {{{
+" Terminal {{{
+set ttyfast       " assume fast terminal and send more chars for smooth redraw
+set lazyredraw    " don't redraw while executing macros, register and cmds
+set mouse=a       " enable mouse in all modes (=a)
+set ttymouse=sgr  " like xterm2 but supporting beyond 223 columns
+" }}}
+
+" Look & Feel {{{
+syntax on
+silent! colorscheme noclown
+
+let &statusline = '[%n] %<%F %m%r%w%y %= (%l,%c) %P of %L'
+set laststatus=2           " every window gets a statusline, always(=2)
+set number relativenumber  " line number for the current, relative for others
+set scrolloff=5            " scroll edge offset (to keep some context)
+set shortmess=a            " abbreviate all(=a) messages when possible
+set showcmd                " show last command
+
+" command line completion similar to zsh default
+" complete up to longest match and display the list of possible matches
+set wildmode=list:longest
+
+set list listchars=tab:»‧,trail:░,precedes:◄,extends:►,nbsp:‧
+augroup listchars
+  autocmd!
+  " Hide trailing space markers in insert mode with a blank override.
+  autocmd InsertEnter * if &list | set listchars+=trail:\  | endif
+  autocmd InsertLeave * if &list | set listchars-=trail:\  | endif
+  " Don't show tab markers if 'expandtab' isn't set.
+  autocmd BufEnter * if &expandtab == 0 | setlocal listchars+=tab:\ \  | endif
+augroup END
+" }}}
+
+" Behavior {{{
+set hidden                      " don't unload but hide buffers when dismissed
+set splitbelow splitright       " new window split to below, vsplit to right
+set autochdir                   " change cwd to file's in selected buffer
+set autoread                    " pickup file changes under unmodified buffer
+set autowrite                   " write to before :next, :make, :suspend, ...
+set autoindent                  " always-be-indenting
+set copyindent                  " copy the existing indenting behavior of file
+set expandtab                   " spaces over tabs for indentation
+set shiftwidth=2                " without wasting too much screen estate
+set softtabstop=-1              " equal to 'shiftwidth'
+set ignorecase smartcase        " case insensitive search if all lowercase
+set incsearch                   " incrementally move to match and highlight
+set hlsearch                    " highlight previous search pattern
+set history=1000                " command and search pattern history size
+set visualbell                  " use visual bell instead of beeping
+set backspace=indent,eol,start  " backspace over everything
+"}}}
+
+" Plugins {{{
+"" Distributed with Vim
+""" matchit: Extend '%' to matching groups like 'if', 'else', 'endif'.
+if has('patch-7.4.1649')  " released 2016/03/25
+  packadd! matchit
+else
+  runtime macros/matchit.vim
+endif
+
+""" ftplugin/man.vim: Render man pages in buffers with ':Man' command.
+runtime ftplugin/man.vim
+if exists(':Man')
+  " Make 'K' in normal mode also use ':Man' instead of shelling out.
+  set keywordprg=:Man
+endif
+
+"" Third-party: managed with vim-plug
 silent! call plug#begin()
 if exists('g:loaded_plug')
-  " Order by GitHub user/project
-
   Plug 'fatih/vim-go'
   Plug 'godlygeek/tabular'
-
+  Plug 'junegunn/fzf', {'dir': g:plug_home . '/fzf', 'do': './install --bin'}
   Plug 'junegunn/fzf.vim'
-  let g:homebrew_fzf = '/usr/local/opt/fzf'
-  if !empty(glob(g:homebrew_fzf))
-    Plug g:homebrew_fzf
-  else
-    Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --bin'}
-  endif
 
   Plug 'mileszs/ack.vim'
   if executable('rg')
     let g:ackprg = 'rg --smart-case --vimgrep'
   elseif executable('ag')
-    let g:ackprg = 'ag --vimgrep'
+    let g:ackprg = 'ag --smart-case --vimgrep'
   endif
 
   Plug 'tpope/vim-commentary'
@@ -32,174 +92,56 @@ if exists('g:loaded_plug')
   Plug 'tpope/vim-unimpaired'
 
   Plug 'w0rp/ale'
+  let &statusline = substitute(&statusline,'%=',
+        \ '%= %#WarningMsg#%{LinterStatus()}%*', '')
   function! LinterStatus() abort
-    let l:c = ale#statusline#Count(bufnr(''))
-    let l:e = l:c.error + l:c.style_error
-    let l:w = l:c.warning + l:c.style_warning
-    return l:e + l:w > 0 ? printf('<Lint: %d Err, %d Warn>', l:e, l:w) : ''
+    if exists('g:loaded_ale')
+      let l:c = ale#statusline#Count(bufnr(''))
+      let l:e = l:c.error + l:c.style_error
+      let l:w = l:c.warning + l:c.style_warning
+      return l:e + l:w > 0 ? printf('<Lint: %d Err, %d Warn>', l:e, l:w) : ''
+    endif
   endfunction
 
   call plug#end()
 endif
 " }}}
 
-" Extensions distributed with Vim {{{
-" matchit: Extend '%' to matching groups like 'if', 'else', 'endif'.
-if has('patch-7.4.1649')
-  packadd! matchit
-else
-  runtime macros/matchit.vim
-endif
-
-" ftplugin/man.vim: Render man pages in buffers with ':Man' command.
-let g:ft_man_open_mode = 'vert'
-runtime ftplugin/man.vim
-if exists(':Man')
-  " Make 'K' in normal mode also use ':Man' instead of shelling out.
-  set keywordprg=:Man
-endif
-" }}}
-
-" Terminal {{{
-set ttyfast  " send more chars instead of ins/del line cmds for smooth redraw
-set lazyredraw  " don't redraw while executing macros, register and cmds
-
-if has('mouse')
-  set mouse=a
-endif
-
-if exists('$TMUX')
-  " Disable Background Control Erase (BCE)
-  set t_ut=
-
-  " 'xterm2' type supports dragging events, used when resizing windows.
-  " Although Tmux supports it, Vim sets the value to 'xterm'.
-  set ttymouse=xterm2
-endif
-" }}}
-
-" Look & Feel {{{
-set number relativenumber  " line number for the current, relative for others
-set showcmd                " show last command
-set shortmess=a            " a=all, use all abbrv possible in messages
-set laststatus=2           " 2=always
-set scrolloff=5            " scroll edge offset (to keep some context)
-set wildmenu wildmode=list:longest
-set list listchars=tab:»‧,trail:░,precedes:◄,extends:►,nbsp:‧
-
-if has('syntax')
-  syntax on
-  set background=dark
-  silent! colorscheme noclown  " silently continue if not found
-endif
-
-" Status Line
-let &statusline = '[%n] %<%F %m%r%w%y%='
-if exists('g:loaded_ale')
-  let &statusline .= '%#WarningMsg#%{LinterStatus()}%*'
-endif
-let &statusline .= ' (%l,%c) %P of %L'
-" }}}
-
-" Behavior {{{
-set autochdir                   " change current directory to file in viewed buffer's
-set hidden                      " don't close but hide the buffer when dismissed
-set splitbelow                  " new window below when `split`
-set splitright                  " new window right when `vsplit`
-set visualbell                  " use visual bell instead of beeping
-set autoread                    " automatically re-read unmodified buffer on file change
-set autowrite                   " automatically save before :next, :make, :suspend, ...
-set backspace=indent,eol,start  " backspace over everything
-
-" Indentation
-set expandtab      " spaces over tabs for indentation
-set softtabstop=2  " without wasting too much screen estate
-set shiftwidth=2   " shift equally to indentation
-set tabstop=8      " tabs are 8 chars for a good reason, keep it that way
-set autoindent     " always-be-indenting
-set copyindent     " copy the existing indenting behavior of file
-" }}}
-
-" Searching
-set ignorecase smartcase  " case insensitive search if there are no capital letters
-set incsearch             " incrementally move to match and highlight
-set hlsearch              " highlight previous search pattern
-set history=1000          " command and search pattern history
-
 " Key Mappings {{{
 let g:mapleader = "\<Space>"
 
-" Normal Mode
+" Use ';' instead of ':' for single finger key go into command mode from
+" normal and visual modes.
 nnoremap ; :
+xnoremap ; :
+" ...but don't lose the function of ';' to repeat f, F, t, T
 nnoremap \ ;
-nmap <Leader><Leader> :call PreferCmd('Buffers', 'buffers')<CR>
-nmap <silent> <Leader>/ :nohlsearch<CR>
-nmap <Leader>h <Plug>(noclown-echo-highlight-group-chain)
 
-" Insert Mode
 " Use <CR> to select completion suggestion instead of <C-y>
 inoremap <expr> <CR> pumvisible() ? '<C-y>' : '<CR>'
-" }}}
 
-" Utility Functions {{{
-function! Preserve(command)
-  let l:saved_search = @/
-  let l:saved_winview = winsaveview()
-
-  execute a:command
-
-  let @/ = l:saved_search
-  call winrestview(l:saved_winview)
-endfunction
-
-function! PreferCmd(...)
-  " Execute the first argument that exists as a command.
-  for l:cmd in a:000
-    if exists(':' . l:cmd) == 2
-      return execute(l:cmd)
-    endif
-  endfor
-endfunction
+nmap <Leader><Leader> :execute PreferCmd('Buffers', 'buffers')<CR>
+nmap <Leader>/ :execute ToggleOpt('hlsearch')<CR>
+nmap <Leader>h <Plug>(noclown-echo-highlight-group-chain)
 " }}}
 
 " Commands
-command! -nargs=0 StripTrailingSpaces call Preserve('%s/\s\+$//e')
+command! StripTrailingSpaces KeepWinView KeepPatterns %s/\v\s+$//e
+" Tmux supports BCE since 2.4 (released 2017/04/20). May still need this.
+command! NoBCE set t_ut= <Bar> redraw!
 
-" Enable file type detection with loading plugins & indent by file type.
+" Detect file types. Load '&rtp/{ftplugin, indent}/<ft>.vim'.
 filetype plugin indent on
 
-" By default do not persist undo history but move storage under ~/.vim for the
-" cases undo persistence might have been enabled for a particular filetype, etc.
-set noundofile undodir=~/.vim/.undo/
+" 'undofile' is off by default but when enabled keep them together under
+" a well-known location instead of same directory with edited files.
+set undodir=~/.vim/.undo/
 
 " Keep viminfo file under ~/.vim instead of home.
 set viminfo+=n~/.vim/.viminfo
 
-" autocmd {{{
-if has('autocmd')
-  augroup filetype
-    autocmd!
-    " Indentation
-    autocmd FileType python setlocal sts=4 sw=4
-    autocmd FileType make setlocal noet ts=4 sts=0 sw=0
-    autocmd FileType go,gitconfig,man setlocal nolist noet sts=0 sw=0
-    autocmd FileType gitcommit setlocal spell
-    autocmd FileType vim setlocal keywordprg=:help
-    " Maps
-    autocmd FileType help nnoremap <silent><buffer> q :q<CR>
-  augroup END
-
-  " Do not show trailing space markers in insert mode.
-  augroup listchars
-    autocmd!
-    autocmd InsertEnter * if &list | set listchars-=trail:░ | endif
-    autocmd InsertLeave * if &list | set listchars+=trail:░ | endif
-  augroup END
-endif
-" }}}
-
+" Local additions and overrides
 let $LOCALVIMRC = expand('~/.vimrc.local')
 if filereadable($LOCALVIMRC) | source $LOCALVIMRC | endif
 
-" modeline:
 " vim: undofile foldmethod=marker foldlevel=1
