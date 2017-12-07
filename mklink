@@ -78,7 +78,7 @@ usage() {
 }
 
 
-HERE=$(dirname "$(realpath -e $0)")
+HERE="$(cd "$(dirname "$0")"; pwd -P)"  # ugly but portable
 PHONY=(all dotfiles dotconfig)
 
 [[ $# -lt 1 || $# -gt 2 ]] && usage
