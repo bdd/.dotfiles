@@ -56,11 +56,7 @@ set backspace=indent,eol,start  " backspace over everything
 " Plugins {{{
 "" Distributed with Vim
 """ matchit: Extend '%' to matching groups like 'if', 'else', 'endif'.
-if has('patch-7.4.1649')  " released 2016/03/25
-  packadd! matchit
-else
-  runtime macros/matchit.vim
-endif
+packadd! matchit
 
 """ ftplugin/man.vim: Render man pages in buffers with ':Man' command.
 runtime ftplugin/man.vim
@@ -69,41 +65,43 @@ if exists(':Man')
   set keywordprg=:Man
 endif
 
-"" Third-party: managed with vim-plug
-silent! call plug#begin()
-if exists('g:loaded_plug')
-  Plug 'fatih/vim-go'
-  Plug 'godlygeek/tabular'
-  Plug 'junegunn/fzf', {'dir': g:plug_home . '/fzf', 'do': './install --bin'}
-  Plug 'junegunn/fzf.vim'
+silent! packadd minpac
+if exists('*minpac#init')
+  command! PackUpdate call minpac#update()
+  command! PackClean call minpac#clean()
+  call minpac#init()
 
-  Plug 'mileszs/ack.vim'
-  if executable('rg')
-    let g:ackprg = 'rg --smart-case --vimgrep'
-  elseif executable('ag')
-    let g:ackprg = 'ag --smart-case --vimgrep'
-  endif
+  call minpac#add('fatih/vim-go')
+  call minpac#add('godlygeek/tabular')
+  call minpac#add('junegunn/fzf', {'do': {-> system('./install --bin')}})
+  call minpac#add('junegunn/fzf.vim')
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
 
-  Plug 'tpope/vim-commentary'
-  Plug 'tpope/vim-eunuch'
-  Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rsi'
-  Plug 'tpope/vim-surround'
-  Plug 'tpope/vim-unimpaired'
+  call minpac#add('mileszs/ack.vim')
+  if executable('rg') | let g:ackprg = 'rg --vimgrep --smart-case' | endif
 
-  Plug 'w0rp/ale'
+  call minpac#add('tpope/vim-commentary')
+  call minpac#add('tpope/vim-eunuch')
+  call minpac#add('tpope/vim-fugitive', {'type': 'opt'})
+  call minpac#add('tpope/vim-rsi')
+  call minpac#add('tpope/vim-surround')
+  call minpac#add('tpope/vim-unimpaired')
+
+  call minpac#add('w0rp/ale')
   let &statusline = substitute(&statusline,'%=',
         \ '%= %#WarningMsg#%{LinterStatus()}%*', '')
   function! LinterStatus() abort
+    let l:status = ''
     if exists('g:loaded_ale')
       let l:c = ale#statusline#Count(bufnr(''))
       let l:e = l:c.error + l:c.style_error
       let l:w = l:c.warning + l:c.style_warning
-      return l:e + l:w > 0 ? printf('<Lint: %d Err, %d Warn>', l:e, l:w) : ''
+      if l:e + l:w > 0
+        let l:status = printf('<Lint: %d Err, %d Warn>', l:e, l:w)
+      endif
     endif
+    return l:status
   endfunction
-
-  call plug#end()
 endif
 " }}}
 
@@ -126,7 +124,7 @@ nmap <Leader>h <Plug>(noclown-echo-highlight-group-chain)
 " }}}
 
 " Commands
-command! StripTrailingSpaces KeepWinView KeepPatterns %s/\v\s+$//e
+command! StripTrailingSpaces KeepWinView keeppatterns %s/\v\s+$//e
 " Tmux supports BCE since 2.4 (released 2017/04/20). May still need this.
 command! NoBCE set t_ut= <Bar> redraw!
 

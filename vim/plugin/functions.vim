@@ -16,20 +16,6 @@ function! ToggleOpt(opt)
   return 'set ' . l:toggle
 endfunction
 
-function! s:KeepPatterns(...)
-  " 'keeppatterns' polyfill
-  let l:cmd = join(a:000, ' ')
-
-  if has('patch-7.4.155')  " released 2014/01/14
-    execute 'keeppatterns ' . l:cmd
-  else
-    execute l:cmd
-    call histdel('search', -1)
-  endif
-endfunction
-
-command! -nargs=+ -complete=command KeepPatterns call s:KeepPatterns(<f-args>)
-
 function! s:KeepWinView(...)
   " Window view keeper akin to 'keeppatterns'.
   " Execute passed command and restore pre-execution window view.
