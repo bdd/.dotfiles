@@ -9,8 +9,8 @@ git_current_branch() {
   hash git 2> /dev/null || return
 
   # Is this directory in the whitelist?
-  for loc in $GIT_LOCATIONS; do
-    if [[ $PWD =~ $loc ]]; then
+  for loc in ${GIT_LOCATIONS}; do
+    if [[ ${PWD} =~ $loc ]]; then
       ref=$(git symbolic-ref HEAD 2>/dev/null)
       if [[ $? -eq 0 ]]; then
         branch=${ref#refs/heads/}
@@ -26,9 +26,8 @@ git_current_branch() {
 
       printf "%s%s%s" \
         ${ZSH_COLORS_GIT_CURRENT_BRANCH_PREFIX} \
-        $branch \
+        ${branch} \
         ${ZSH_COLORS_GIT_CURRENT_BRANCH_SUFFIX}
-
     fi
   done
 
@@ -39,7 +38,7 @@ git_locations() {
   local dir
 
   if [[ $# == 0 ]]; then
-    echo $GIT_LOCATIONS
+    echo ${GIT_LOCATIONS}
     return
   fi
 
@@ -51,13 +50,13 @@ git_locations() {
         ;;
       *)
         dir=${1:a} # 'a': Turn into absolute path
-        if [[ -d $dir ]]; then
+        if [[ -d ${dir} ]]; then
           # If not already in GIT_LOCATIONS
-          if [[ -z ${GIT_LOCATIONS[(r)$dir]} ]]; then
-            GIT_LOCATIONS+=($dir)
+          if [[ -z ${GIT_LOCATIONS[(r)${dir}]} ]]; then
+            GIT_LOCATIONS+=(${dir})
           fi
         else
-          echo "No such directory: $dir" 2>&1
+          echo "No such directory: ${dir}" 2>&1
           return 1
         fi
         shift

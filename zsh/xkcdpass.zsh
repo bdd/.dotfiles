@@ -1,17 +1,19 @@
 # ZSH only
-xkcdpass () {
-  local n=4 sep="space"
-  local opt capitalize=false
+xkcdpass() {
+  local capitalize=false
+  local sep='space'
+  local n=4
   local passphrase
+  local opt
 
   while getopts cds opt; do
     case ${opt} in
       c)
         capitalize=true ;;
       d)
-        sep="digit"  ;;
+        sep='digit' ;;
       s)
-        sep="symbol" ;;
+        sep='symbol' ;;
       *)
         return 64 ;;
     esac
@@ -23,8 +25,8 @@ xkcdpass () {
     n=$1
   fi
 
-  for i in {1..$n}; do
-    local pick=$(( RANDOM % ${#XKCDPASS_WORDLIST} ))
+  for ((i=1; i <= ${n}; i++)); do
+    local pick=$((RANDOM % ${#XKCDPASS_WORDLIST[@]}))
     local word=${XKCDPASS_WORDLIST[pick]}
 
     if ${capitalize}; then word=${(C)word}; fi
@@ -34,10 +36,10 @@ xkcdpass () {
     fi
   done
 
-  printf "%s\n" ${passphrase}
+  printf '%s\n' "${passphrase}"
 }
 
-_xkcdpass:separator () {
+_xkcdpass:separator() {
   local symbols pick
   symbols=('/' '|' '$' '%' '*' '#' '@' '!')
 
