@@ -118,8 +118,8 @@ nnoremap \ ;
 " Use <CR> to select completion suggestion instead of <C-y>
 inoremap <expr> <CR> pumvisible() ? '<C-y>' : '<CR>'
 
-nmap <Leader><Leader> :execute PreferCmd('Buffers', 'buffers')<CR>
-nmap <Leader>/ :execute ToggleOpt('hlsearch')<CR>
+nnoremap <Leader><Leader> :execute PreferCmd('Buffers', 'buffers')<CR>
+nnoremap <Leader>/ :execute ToggleOpt('hlsearch')<CR>
 nmap <Leader>h <Plug>(noclown-echo-highlight-group-chain)
 " }}}
 
