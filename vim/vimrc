@@ -67,8 +67,8 @@ endif
 
 silent! packadd minpac
 if exists('*minpac#init')
-  command! PackUpdate call minpac#update()
-  command! PackClean call minpac#clean()
+  command! -bar PackUpdate call minpac#update()
+  command! -bar PackClean call minpac#clean()
   call minpac#init()
 
   call minpac#add('fatih/vim-go')
