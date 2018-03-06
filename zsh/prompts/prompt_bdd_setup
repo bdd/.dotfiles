@@ -13,11 +13,12 @@ prompt_bdd_setup() {
     echo "%F{${color}}$*%f"
   }
 
-  PS1="%~$(colorize_by_os '%#') "
+  PS1="%~$(colorize_by_os '%#')"  # cwd relative to home and '%' (or '#' if root)
+  # Notice ternary expression: %(<n>check.true-text.false-text).
+  PS1+="%F{blue}%(1j.&.)%f"  # '&' if there are background jobs.
+  PS1+=" "  # separate prompt from command input
 
-  # Notice ternary expression: %(var.true-text.false-text).
-  # Exit status (%?) is rendered when $? is false/non-zero.
-  RPROMPT="%F{red}%(?..%?)%f"
+  RPROMPT="%F{red}%(?..%?)%f"  # exit status of last process is not 0
 
   if [[ $# -gt 0 ]]; then
     case $1 in
