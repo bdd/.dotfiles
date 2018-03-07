@@ -5,6 +5,7 @@ xkcdpass() {
   local n=4
   local passphrase
   local opt
+  local rnd_src='/dev/urandom'
 
   while getopts cds opt; do
     case ${opt} in
@@ -23,6 +24,20 @@ xkcdpass() {
 
   if [[ $# -gt 0 && "$1" =~ ^[[:digit:]]+$ ]]; then
     n=$1
+  fi
+
+  # Seed RANDOM
+  #
+  # Whoa! What's going on with 'od' here?
+  # -t u4: unsigned 4 byte
+  # -N 4: print in 4 byte chunks
+  # -A n: do not print addreses, just the input
+  # -v: if there's repeated data, print verbatim instead of '*'
+  if [[ -r "${rnd_src}" ]]; then
+    RANDOM=$(od -t u4 -N 4 -A n -v < "${rnd_src}" | tr -d ' ')
+  else
+    printf 'fatal: no %s to seed $RANDOM\n' "${rnd_src}"
+    return 72 # EX_OSFILE
   fi
 
   for ((i=1; i <= ${n}; i++)); do
