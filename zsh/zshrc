@@ -58,14 +58,16 @@ bindkey '^G' pound-insert
 
 ### ENVIRONMENT VARIABLES ######################################################
 # Save current PATH and build one from standard directories for sudo user
-_PATH="${PATH}"
-PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+PRE_RC_PATH="${PATH}"
+PREF_PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
 
 # On macOS /etc/zprofile runs /usr/libexec/path_helper to build PATH from
 # entries in /etc/paths and /etc/paths.d/*. Append the ones we don't already have.
-for dir in $(comm -1 -3 <(echo "${PATH//:/\\n}" | sort) <(echo "${_PATH//:/\\n}" | sort)); do
-  PATH="${PATH}:${dir}"
+for dir in $(comm -1 -3 <(echo "${PREF_PATH//:/\\n}" | sort) <(echo "${PRE_RC_PATH//:/\\n}" | sort)); do
+  APPEND_PATH="${APPEND_PATH+$APPEND_PATH:}${dir}"
 done
+
+PATH=$PREF_PATH:$APPEND_PATH
 
 HISTSIZE=2000
 SAVEHIST=2000
