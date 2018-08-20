@@ -14,7 +14,6 @@ silent! colorscheme noclown
 
 let &statusline = '[%n] %<%F %m%r%w%y %= (%l,%c) %P of %L'
 set laststatus=2           " every window gets a statusline, always(=2)
-set number relativenumber  " line number for the current, relative for others
 set scrolloff=5            " scroll edge offset (to keep some context)
 set shortmess=a            " abbreviate all(=a) messages when possible
 set showcmd                " show last command
