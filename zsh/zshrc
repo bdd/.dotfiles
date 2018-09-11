@@ -55,6 +55,10 @@ alias dv='dirs -v' # need a shorter command to see the dirstack
 alias ls='ls -FG' # BSD ls -- with colors
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
+# Commands that shouldn't clutter history, so they are space prefixed.
+alias cd=' cd'
+alias ls=' ls'
+
 ### KEY BINDINGS ###############################################################
 bindkey -e # Emacs key bindings
 bindkey '^G' pound-insert
