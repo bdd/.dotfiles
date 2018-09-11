@@ -3,6 +3,8 @@
 setopt auto_cd               # if not a command but a dir name, cd into it
 setopt auto_pushd            # cd pushes old dir onto dir stack
 setopt pushd_ignore_dups     # ...but don't allow dupes in the stack
+setopt pushd_minus           # use '-' instead of '+' to refer stack location
+setopt pushd_silent          # don't print dirstack when using `pushd` and `popd` directly
 
 # Completion
 setopt complete_in_word      # complete in word from both sides
@@ -49,6 +51,7 @@ alias -g WC='| wc -l'
 
 # Command Aliases
 alias h=history
+alias dv='dirs -v' # need a shorter command to see the dirstack
 alias ls='ls -FG' # BSD ls -- with colors
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
@@ -72,6 +75,7 @@ PATH=$PREF_PATH:$APPEND_PATH
 HISTSIZE=2000
 SAVEHIST=2000
 HISTFILE=~/.history
+DIRSTACKSIZE=32              # limit number of dirs kept in stack so it doesn't get unwieldy
 WORDCHARS=${WORDCHARS:s,/,,} # Remove '/' from WORDCHARS so path components are treated like words.
 
 # LS_COLORS Generator: http://geoff.greer.fm/lscolors/
