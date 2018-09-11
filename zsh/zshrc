@@ -44,7 +44,7 @@ setopt no_beep               # no beeping at all
 alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
-alias -g G='| grep -F'
+alias -g G='| grep -F --color=auto'
 alias -g L='| less -RS'
 alias -g S='| sort'
 alias -g WC='| wc -l'
