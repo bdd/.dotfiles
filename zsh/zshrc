@@ -55,10 +55,6 @@ alias dv='dirs -v' # need a shorter command to see the dirstack
 alias ls='ls -FG' # BSD ls -- with colors
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
-# Commands that shouldn't clutter history, so they are space prefixed.
-alias cd=' cd'
-alias ls=' ls'
-
 ### KEY BINDINGS ###############################################################
 bindkey -e # Emacs key bindings
 bindkey '^G' pound-insert
@@ -79,6 +75,7 @@ PATH=$PREF_PATH:$APPEND_PATH
 HISTSIZE=2000
 SAVEHIST=2000
 HISTFILE=~/.history
+HISTORY_IGNORE='(cd(| -| ..)|ls|pwd|bg|fg|clear|mount)'
 DIRSTACKSIZE=32              # limit number of dirs kept in stack so it doesn't get unwieldy
 WORDCHARS=${WORDCHARS:s,/,,} # Remove '/' from WORDCHARS so path components are treated like words.
 
