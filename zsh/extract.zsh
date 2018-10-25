@@ -8,7 +8,7 @@ extract () {
       t)
         test="-${opt}"    ;;
       \?)
-        echo "Unrecognized option -${OPT}ARG"
+        echo "Unrecognized option -${OPTARG}"
         echo "Usage: $0 [-vt] <file>"
         return 1
     esac
