@@ -1,22 +1,30 @@
-extract () {
-  local opt verbose test
+# shellcheck shell=bash
+# vim: filetype=sh
+extract() {
+  local verbose test
 
-  while getopts :vt opt; do
+  if [[ -n "${BASH_VERSION}" ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
+  local __usage__="Usage: ${fn} [-vt] file"
+
+  local opt OPTIND=1
+  while getopts ':vt' opt; do
     case ${opt} in
-      v)
-        verbose="-${opt}" ;;
-      t)
-        test="-${opt}"    ;;
-      \?)
-        echo "Unrecognized option -${OPTARG}"
-        echo "Usage: $0 [-vt] <file>"
-        return 1
+      v) verbose="-${opt}" ;;
+      t) test="-${opt}" ;;
+      *)
+        echo "Unrecognized option -${OPTARG}" >&2
+        echo "${__usage__}" >&2
+        return 64 # EX_USAGE
+        ;;
     esac
   done
 
   shift $((OPTIND - 1))
 
-  if [[ $# -lt 1 ]]; then return; fi
+  if [[ $# -lt 1 ]]; then
+    echo "${__usage__}" >&2
+    return 64 # EX_USAGE
+  fi
 
   case "$1" in
     *.tgz|*.txz|*.tbz2)

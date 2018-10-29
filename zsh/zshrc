@@ -120,5 +120,6 @@ elif [[ $OSTYPE =~ linux* ]]; then
 fi
 
 ### ZSH RC Extensions ##########################################################
-function { local f; for f ($@) source $f } ~/.zsh/*.zsh(N) ~/.zshrc.local(N)
+# Load: ~/.zsh/*.zsh, ~/.zsh/*.sh, and ~/.zshrc.local
+function { local f; for f ($@) source $f } ~/.zsh/*.{z,}sh(N) ~/.zshrc.local(N)
 ################################################################################

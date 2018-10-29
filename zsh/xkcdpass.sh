@@ -1,76 +1,101 @@
-# ZSH only
+# shellcheck shell=bash
+# vim: filetype=sh
 xkcdpass() {
   local capitalize=false
-  local sep='space'
-  local n=4
-  local passphrase
-  local opt
-  local rnd_src='/dev/urandom'
+  local separator='space'
+  local nwords=4
 
-  while getopts cds opt; do
+  if [[ -n ${BASH_VERSION} ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
+  local __usage__="Usage: ${fn} [-C] [-d | -s] [nwords]"
+
+  local opt OPTIND=1
+  while getopts ':cds' opt; do
     case ${opt} in
-      c)
-        capitalize=true ;;
-      d)
-        sep='digit' ;;
-      s)
-        sep='symbol' ;;
+      c) capitalize=true ;;
+      d) separator='digit' ;;
+      s) separator='symbol' ;;
       *)
-        return 64 ;;
+        echo "Unrecognized option -${OPTARG}" >&2
+        echo "${__usage__}" >&2
+        return 64 # EX_USAGE
+        ;;
     esac
   done
 
   shift $((OPTIND - 1))
 
-  if [[ $# -gt 0 && "$1" =~ ^[[:digit:]]+$ ]]; then
-    n=$1
+  if [[ $# -gt 0 ]]; then
+    if [[ "$1" =~ ^[[:digit:]]+$ ]]; then
+      nwords=$1
+    else
+      echo "${__usage__}" >&2
+      return 64 # EX_USAGE
+    fi
   fi
 
-  # Seed RANDOM
-  #
-  # Whoa! What's going on with 'od' here?
-  # -t u4: unsigned 4 byte
-  # -N 4: print in 4 byte chunks
-  # -A n: do not print addreses, just the input
-  # -v: if there's repeated data, print verbatim instead of '*'
-  if [[ -r "${rnd_src}" ]]; then
-    RANDOM=$(od -t u4 -N 4 -A n -v < "${rnd_src}" | tr -d ' ')
+  # Seed RANDOM with a 32-bit unsigned integer from /dev/urandom
+  local urandom='/dev/urandom'
+  if [[ -r "${urandom}" ]]; then
+    # Whoa! What's going on with 'od'?
+    #  -t u4: unsigned 4 byte
+    #  -N 4: print in 4 byte chunks
+    #  -A n: do not print addresses, just the input
+    #  -v: if there's repeated data, print verbatim instead of '*'
+    RANDOM=$(od -t u4 -N 4 -A n -v < "${urandom}" | tr -d ' ')
   else
-    printf 'fatal: no %s to seed $RANDOM\n' "${rnd_src}"
+    echo "fatal: no ${urandom} to seed RANDOM"
     return 72 # EX_OSFILE
   fi
 
-  for ((i=1; i <= ${n}; i++)); do
-    local pick=$((RANDOM % ${#XKCDPASS_WORDLIST[@]}))
-    local word=${XKCDPASS_WORDLIST[pick]}
+  local passphrase i
+  for ((i=1; i <= nwords; i++)); do
+    local x=$((RANDOM % ${#XKCDPASS_WORDLIST[@]}))
+    if [[ -n ${ZSH_VERSION} ]]; then
+      ((x++)) # zsh arrays start from index 1
+    fi
 
-    if ${capitalize}; then word=${(C)word}; fi
+    local word=${XKCDPASS_WORDLIST[x]}
+
+    if ${capitalize}; then
+      if [[ -n ${ZSH_VERSION} ]]; then
+        # Zsh
+        # shellcheck disable=SC2154
+        word=${(C)word}
+      else
+        # Bash
+        word=${word^}
+      fi
+    fi
+
     passphrase+=${word}
-    if [[ $i -lt $n ]]; then
-      passphrase+=$(_xkcdpass:separator ${sep})
+
+    if [[ $i -lt ${nwords} ]]; then
+      passphrase+=$(_xkcdpass:separator ${separator})
     fi
   done
 
-  printf '%s\n' "${passphrase}"
+  echo "${passphrase}"
 }
 
 _xkcdpass:separator() {
-  local symbols pick
-  symbols=('/' '|' '$' '%' '*' '#' '@' '!')
+  local symbols=('/' '|' '$' '%' '*' '#' '@' '!')
 
   case "$1" in
-    "digit")
-      printf "%d" $(( RANDOM % 10 ))
+    digit) echo $((RANDOM % 10)) ;;
+    symbol)
+      local i=$((RANDOM % ${#symbols[@]}))
+
+      if [[ -n ${ZSH_VERSION} ]]; then
+        ((i++)) # zsh arrays start from index 1
+      fi
+
+      echo "${symbols[i]}"
       ;;
-    "symbol")
-      pick=$(( 1 + RANDOM % ${#symbols} )) # array index starts from 1
-      printf "%c" ${symbols[pick]}
-      ;;
-    *)
-      printf " "
+    *) echo ' ' ;;
   esac
 }
 
+# shellcheck disable=SC1010 # ignore words that happen to be shell keywords.
 XKCDPASS_WORDLIST=(
   ability able aboard about above accept accident according account accurate acres across act action
   active activity actual actually add addition additional adjective adult adventure advice affect
