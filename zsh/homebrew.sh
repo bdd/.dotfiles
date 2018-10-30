@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 if [[ $OSTYPE =~ darwin.* ]]; then
   # Under macOS we expect Homebrew to be installed under /usr/local and
   # /usr/local/bin to be in PATH, hence the `hash` check.

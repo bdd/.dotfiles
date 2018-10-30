@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 any() {
   if [[ -n "$1" ]]; then
     # convert 'thing' to '[t]hing' for 'ps | grep [t]hing' trick

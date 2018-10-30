@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 
 # Don't continue evaluating this file if not running under tmux.
 [[ -z "${TMUX}" ]] || return

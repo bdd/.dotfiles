@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 if [[ ${OSTYPE} =~ darwin* ]]; then
   _candidates="${HOME}/Applications /Applications /usr/local/opt/emacs"
 

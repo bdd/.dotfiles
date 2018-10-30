@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 
 # macOS only
 [[ $OSTYPE =~ darwin* ]] || return

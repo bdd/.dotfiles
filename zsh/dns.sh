@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 dns-lg() {
   local DNSLG='http://www.dns-lg.com'
   local anycast_nodes="google1 google2 opendns1 opendns2 cloudflare quad9 he"

@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 extract() {
   local verbose test
 

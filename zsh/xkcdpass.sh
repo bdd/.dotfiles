@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# vim: filetype=sh
 xkcdpass() {
   local capitalize=false
   local separator='space'
