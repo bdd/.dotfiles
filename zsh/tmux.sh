@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 # Don't continue evaluating this file if not running under tmux.
-[[ -z "${TMUX}" ]] || return
+[[ -n "${TMUX}" ]] || return
 
 tmux:refresh-env() {
   # '-s' option outputs Bourne-compatible unset/export commands.
