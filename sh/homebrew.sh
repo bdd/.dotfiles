@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-whence -p brew > /dev/null || return
+command -v brew > /dev/null || return
 
 export HOMEBREW_NO_EMOJI=1
 export HOMEBREW_NO_ANALYTICS=1
