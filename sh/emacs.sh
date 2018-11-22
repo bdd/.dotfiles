@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-if [[ ${OSTYPE} =~ darwin* ]]; then
+if [[ ${OSTYPE} =~ ^darwin ]]; then
   _candidates="${HOME}/Applications /Applications /usr/local/opt/emacs"
 
   for _loc in ${_candidates}; do

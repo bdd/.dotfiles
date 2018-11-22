@@ -64,7 +64,7 @@ alias dv='dirs -v' # need a shorter command to see the dirstack
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
 # OS specific aliases and directory hashes
-if [[ $OSTYPE =~ darwin* ]]; then
+if [[ $OSTYPE =~ ^darwin ]]; then
   alias -g CP='| pbcopy'
 
   hash -d D=~/Desktop

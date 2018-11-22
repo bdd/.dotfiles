@@ -4,7 +4,7 @@ whence -p brew > /dev/null || return
 export HOMEBREW_NO_EMOJI=1
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_GITHUB_API=1
-if [[ $OSTYPE =~ darwin.* ]]; then
+if [[ $OSTYPE =~ ^darwin ]]; then
   export HOMEBREW_CASK_OPTS='--appdir=~/Applications'
 fi
 

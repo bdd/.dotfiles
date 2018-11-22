@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 # macOS only
-[[ $OSTYPE =~ darwin* ]] || return
+[[ $OSTYPE =~ ^darwin ]] || return
 
 _RAMDISK_MOUNT_POINT="/Volumes/ramdisk"
 

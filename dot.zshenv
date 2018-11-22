@@ -27,7 +27,7 @@ done
 PATH=${(j/:/)_path}; unset _path
 
 # Linuxbrew
-if [[ ${OSTYPE} =~ linux.* ]]; then
+if [[ ${OSTYPE} =~ ^linux ]]; then
   _linuxbrew="/home/linuxbrew/.linuxbrew"
   if [[ -x "${_linuxbrew}/bin/brew" ]]; then
     export PATH="${_linuxbrew}/bin:${_linuxbrew}/sbin:${PATH}"

@@ -24,7 +24,7 @@ xkcdpass() {
   shift $((OPTIND - 1))
 
   if [[ $# -gt 0 ]]; then
-    if [[ "$1" =~ ^[[:digit:]]+$ ]]; then
+    if [[ "$1" =~ ^[0-9]+$ ]]; then
       nwords=$1
     else
       echo "${__usage__}" >&2
