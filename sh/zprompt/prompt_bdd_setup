@@ -1,5 +1,4 @@
-# -*- mode: sh -*-
-# vim: ft=sh
+# vim: filetype=zsh
 
 prompt_bdd_setup() {
   colorize_by_os() {

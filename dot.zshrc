@@ -1,5 +1,7 @@
+# vim: filetype=zsh
+#
 ### zshoptions(1) ##############################################################
-# Chaging Directories
+# Changing Directories
 setopt auto_cd               # if not a command but a dir name, cd into it
 setopt auto_pushd            # cd pushes old dir onto dir stack
 setopt pushd_ignore_dups     # ...but don't allow dupes in the stack
@@ -13,7 +15,6 @@ setopt list_packed           # print matches in columns to occupy less lines.
 # Expansion and Globbing
 setopt bad_pattern           # if a pattern is badly formed, print an error
 setopt nomatch               # if a pattern has no matches, print an error
-#setopt glob_star_short       # '**/*.c' can be abbrev'd as '**.c'
 setopt magic_equal_subst     # always filename expand expression after equals (e.g. foo=~bar/a[...])
 setopt mark_dirs             # append a trailing '/' to dir names from globbing.
 
@@ -39,6 +40,14 @@ setopt transient_rprompt     # remove RPROMPT when accepting command so doesn't 
 # ZLE
 setopt no_beep               # no beeping at all
 
+### PARAMETERS - zshparam(1) ###################################################
+HISTSIZE=2000
+SAVEHIST=2000
+HISTFILE=~/.history
+HISTORY_IGNORE='(cd(| -| ..)|ls|pwd|bg|fg|clear|mount)'
+DIRSTACKSIZE=32              # limit number of dirs kept in stack so it doesn't get unwieldy
+WORDCHARS=${WORDCHARS:s,/,,} # Remove '/' from WORDCHARS so path components are treated like words.
+
 ### ALIASES ####################################################################
 # Global Aliases
 alias -g ...='../..'
@@ -52,46 +61,25 @@ alias -g WC='| wc -l'
 # Command Aliases
 alias h=history
 alias dv='dirs -v' # need a shorter command to see the dirstack
-alias ls='ls -FG' # BSD ls -- with colors
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
+
+# OS specific aliases and directory hashes
+if [[ $OSTYPE =~ darwin* ]]; then
+  alias -g CP='| pbcopy'
+
+  hash -d D=~/Desktop
+  hash -d d=~/Downloads
+  hash -d a=~/Applications
+  hash -d icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs
+fi
 
 ### KEY BINDINGS ###############################################################
 bindkey -e # Emacs key bindings
 bindkey '^G' pound-insert
 
-### ENVIRONMENT VARIABLES ######################################################
-# Save current PATH and build one from standard directories for sudo user
-PRE_RC_PATH="${PATH}"
-PREF_PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
-
-# On macOS /etc/zprofile runs /usr/libexec/path_helper to build PATH from
-# entries in /etc/paths and /etc/paths.d/*. Append the ones we don't already have.
-for dir in $(comm -1 -3 <(echo "${PREF_PATH//:/\\n}" | sort) <(echo "${PRE_RC_PATH//:/\\n}" | sort)); do
-  APPEND_PATH="${APPEND_PATH+$APPEND_PATH:}${dir}"
-done
-
-PATH=$PREF_PATH:$APPEND_PATH
-
-HISTSIZE=2000
-SAVEHIST=2000
-HISTFILE=~/.history
-HISTORY_IGNORE='(cd(| -| ..)|ls|pwd|bg|fg|clear|mount)'
-DIRSTACKSIZE=32              # limit number of dirs kept in stack so it doesn't get unwieldy
-WORDCHARS=${WORDCHARS:s,/,,} # Remove '/' from WORDCHARS so path components are treated like words.
-
-# LS_COLORS Generator: http://geoff.greer.fm/lscolors/
-# BSD: LSCOLORS | Linux: LS_COLORS
-export LSCOLORS=exfxcxdxbxegedabagacad
-export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
-
-# Pick the available EDITOR in order of preference.
-# For commands found, `whence` will print out the resolved paths or value of alias or function name.
-# Remember: "Ed is the standard text editor." --ed(1)
-export EDITOR=$(whence vim vi ed | head -n 1)
-
 ### MISC #######################################################################
 # Prompt Themes
-fpath=(~/.zsh/prompts $fpath)
+fpath=(~/.sh/zprompt $fpath)
 autoload -Uz promptinit; promptinit
 prompt ${prompt_themes[(r)bdd]-off}  # if exists load 'bdd' theme or else turn themes off.
 
@@ -103,23 +91,7 @@ zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*' group-name ''
 
-# Use LSCOLORS on auto completion as well
-zmodload -i zsh/complist
-zstyle ':completion:*' list-colors ${(s.:.)LSCOLORS}
-
-# OS specific aliases and directory hashes
-if [[ $OSTYPE =~ darwin* ]]; then
-  alias -g CP='| pbcopy'
-
-  hash -d D=~/Desktop
-  hash -d d=~/Downloads
-  hash -d a=~/Applications
-  hash -d icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs
-elif [[ $OSTYPE =~ linux* ]]; then
-  alias ls='ls -F --color=auto'
-fi
-
-### ZSH RC Extensions ##########################################################
-# Load: ~/.zsh/*.zsh, ~/.zsh/*.sh, and ~/.zshrc.local
-function { local f; for f ($@) source $f } ~/.zsh/*.{z,}sh(N) ~/.zshrc.local(N)
+### RC EXTENSIONS ##############################################################
+# Load: ~/.sh/*.zsh, ~/.sh/*.sh, and ~/.zshrc.local
+function { local f; for f ($@) source $f } ~/.sh/*.{z,}sh(N) ~/.zshrc.local(N)
 ################################################################################

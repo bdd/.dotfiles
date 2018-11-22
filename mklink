@@ -59,7 +59,7 @@ link:dotconfig() {
 link:all() {
   link:dotfiles
   link:dotconfig
-  link zsh .zsh
+  link sh .sh
   link vim .vim
   link emacs.d .emacs.d
 }

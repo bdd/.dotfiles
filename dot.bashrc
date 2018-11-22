@@ -22,38 +22,20 @@ shopt -s "${_shopts[@]}"; unset _shopts
 alias h=history
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
-if [[ $OSTYPE =~ darwin* ]]; then
-  alias ls='ls -FG'
-elif [[ $OSTYPE =~ linux* ]]; then
-  alias ls='ls -F --color=auto'
-fi
-
 ## Key Bindings
 bind '"\C-G":insert-comment'
 
-## Environment Variables
-# History
-export HISTCONTROL='ignorespace:ignoredups'
-export HISTIGNORE='cd:cd -:cd ..:pwd:bg:fg:clear:mount'
-export HISTFILESIZE=2000
+## Bash Variables
+HISTCONTROL='ignorespace:ignoredups'
+HISTIGNORE='cd:cd -:cd ..:pwd:bg:fg:clear:mount'
+HISTFILESIZE=2000
 
 ## Prompt
-export PS1='\w\$ '
-
-# LS_COLORS Generator: http://geoff.greer.fm/lscolors/
-# BSD: LSCOLORS | Linux: LS_COLORS
-export LSCOLORS=exfxcxdxbxegedabagacad
-export LS_COLORS="di=34:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
-
-# Pick the available EDITOR in order of preference.
-# For commands found, `whence` will print out the resolved paths or value of alias or function name.
-# Remember: "Ed is the standard text editor." --ed(1)
-EDITOR=$(command -v vim vi ed | head -n 1)
-export EDITOR
+PS1='\w\$ '
 
 ## Extensions
-# Load dual shell RC extensions from '~/.zsh' and ~/.bashrc.local
-for _ext in ~/.zsh/*.sh ~/.bashrc.loca[l]; do
+# Load: ~/.sh/*.bash, ~/.sh/*.sh, and ~/.bashrc.local
+for _ext in ~/.sh/*.{ba,}sh ~/.bashrc.loca[l]; do
   # shellcheck source=/dev/null # don't follow to check sourced files.
   source "${_ext}"
 done
