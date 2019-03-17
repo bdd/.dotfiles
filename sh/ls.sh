@@ -14,7 +14,7 @@ elif [[ $OSTYPE =~ ^linux ]]; then
 fi
 
 
-if [[ -n "${ZSH_VERSION}" ]]; then
+if [[ -n "${ZSH_VERSION-}" ]]; then
   # Use LS_COLORS on completion prompts too
   zmodload -i zsh/complist
   zstyle ':completion:*' list-colors ${(s/:/)LS_COLORS}

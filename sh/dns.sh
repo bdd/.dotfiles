@@ -4,7 +4,7 @@ dns-lg() {
   local anycast_nodes="google1 google2 opendns1 opendns2 cloudflare quad9 he"
   local default_nodes="google1 opendns1 cloudflare quad9 he"
 
-  if [[ -n "${BASH_VERSION}" ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
+  if [[ -n "${BASH_VERSION-}" ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
   local __usage__="Usage: ${fn} [-Aau] name [rrtype]\\n"
 
   local opt OPTIND=1
@@ -51,7 +51,7 @@ dns-lg() {
     ) || return 69 # EX_UNAVAILABLE
   fi
 
-  if [[ -n "${BASH_VERSION}" ]]; then
+  if [[ -n "${BASH_VERSION-}" ]]; then
     local read_array='-a'
   else
     local read_array='-A'

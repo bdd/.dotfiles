@@ -9,9 +9,9 @@ if [[ $OSTYPE =~ ^darwin ]]; then
 fi
 
 # Load completion files
-if [[ -n "${ZSH_VERSION}" ]]; then
+if [[ -n "${ZSH_VERSION-}" ]]; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:${FPATH}
-elif [[ -n "${BASH_VERSION}" ]]; then
+elif [[ -n "${BASH_VERSION-}" ]]; then
   for _f in "$(brew --prefix)"/etc/bash_completion.d/*; do
     # shellcheck source=/dev/null # don't follow to check sourced files.
     source "${_f}"

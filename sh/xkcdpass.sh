@@ -4,7 +4,7 @@ xkcdpass() {
   local separator='space'
   local nwords=4
 
-  if [[ -n ${BASH_VERSION} ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
+  if [[ -n ${BASH_VERSION-} ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
   local __usage__="Usage: ${fn} [-C] [-d | -s] [nwords]"
 
   local opt OPTIND=1
@@ -49,14 +49,14 @@ xkcdpass() {
   local passphrase i
   for ((i=1; i <= nwords; i++)); do
     local x=$((RANDOM % ${#XKCDPASS_WORDLIST[@]}))
-    if [[ -n ${ZSH_VERSION} ]]; then
+    if [[ -n ${ZSH_VERSION-} ]]; then
       ((x++)) # zsh arrays start from index 1
     fi
 
     local word=${XKCDPASS_WORDLIST[x]}
 
     if ${capitalize}; then
-      if [[ -n ${ZSH_VERSION} ]]; then
+      if [[ -n ${ZSH_VERSION-} ]]; then
         # Zsh
         # shellcheck disable=SC2154
         word=${(C)word}
@@ -84,7 +84,7 @@ _xkcdpass:separator() {
     symbol)
       local i=$((RANDOM % ${#symbols[@]}))
 
-      if [[ -n ${ZSH_VERSION} ]]; then
+      if [[ -n ${ZSH_VERSION-} ]]; then
         ((i++)) # zsh arrays start from index 1
       fi
 

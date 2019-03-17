@@ -2,7 +2,7 @@
 extract() {
   local verbose test
 
-  if [[ -n "${BASH_VERSION}" ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
+  if [[ -n "${BASH_VERSION-}" ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
   local __usage__="Usage: ${fn} [-vt] file"
 
   local opt OPTIND=1

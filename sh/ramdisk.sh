@@ -32,7 +32,7 @@ rd-attach() {
   diskutil erasevolume HFS+ "ramdisk" "${raw_disk}"
   mount -uwo noatime,noowners ${_RAMDISK_MOUNT_POINT}
 
-  if [[ -n ${ZSH_VERSION} ]]; then
+  if [[ -n ${ZSH_VERSION-} ]]; then
     hash -d ramdisk="${_RAMDISK_MOUNT_POINT}"
   fi
 }
@@ -40,7 +40,7 @@ rd-attach() {
 rd-eject() {
   diskutil eject "${_RAMDISK_MOUNT_POINT}"
 
-  if [[ -n ${ZSH_VERSION} ]]; then
+  if [[ -n ${ZSH_VERSION-} ]]; then
     unhash -d ramdisk
   fi
 }
