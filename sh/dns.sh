@@ -75,3 +75,13 @@ dns-lg() {
       | sort -n
   done
 }
+
+dns-flush() {
+  if [[ $OSTYPE =~ ^darwin ]]; then
+    sudo killall -HUP mDNSResponder
+    sudo killall mDNSResponderHelper
+    sudo dscacheutil -flushcache
+  else
+    printf "Not implemented on ${OSTYPE} yet.\n" >&2
+  fi
+}
