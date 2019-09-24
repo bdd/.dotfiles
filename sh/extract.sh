@@ -37,7 +37,7 @@ extract() {
     *.bz2)
       bunzip2 ${verbose} ${test} "$1" ;;
     *.zip)
-      unzip ${verbose} ${test} -q "$1" ;;
+      unzip ${verbose:--q} ${test+-l} "$1" ;;
     *.[jwe]ar)
       jar ${test:-x}${verbose+v}f "$1" ;;
     *.Z)
