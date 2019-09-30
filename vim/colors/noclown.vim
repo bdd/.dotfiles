@@ -119,10 +119,11 @@ call s:Link('LineNr', 'NonText')
 call s:None('CursorLine')
 
 call s:Defn('VertSplit', s:fg('fade'), s:bg('fade-more'))
-call s:Link('StatusLineNC', 'VertSplit')
 
 call s:Defn('StatusLine', s:attr('reverse'))
-call s:Defn('StatusLineTerm', s:fg('background'), s:bg('attention'))
+call s:Link('StatusLineNC', 'VertSplit')
+call s:Defn('StatusLineTerm', s:fg('attention'), s:attr('reverse'))
+call s:Defn('StatusLineTermNC', s:fg('attention'), s:bg('fade-more'))
 call s:Defn('Visual', s:attr('reverse'))
 call s:Defn('MatchParen', s:attr('reverse'))
 
