@@ -61,7 +61,6 @@ link:all() {
   link:dotconfig
   link sh .sh
   link vim .vim
-  link emacs.d .emacs.d
 }
 
 in_array() {
