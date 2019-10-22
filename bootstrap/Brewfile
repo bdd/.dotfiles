@@ -1,0 +1,66 @@
+# Homebrew Bundle
+#
+# Install Homebrew:
+# % ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+#
+# Run Homebrew Bundle to install everything below:
+# % brew bundle
+
+tap 'homebrew/core'
+tap 'homebrew/bundle'
+tap 'caskroom/cask'
+tap 'caskroom/fonts'
+tap 'caskroom/versions'
+cask_args appdir: '~/Applications'
+
+brew 'fzf'
+brew 'git'
+brew 'gnupg2'
+brew 'jq'
+brew 'mosh'
+brew 'msmtp'
+brew 'mtr'
+brew 'nmap'
+brew 'openssl'
+brew 'parallel'
+brew 'ripgrep'
+brew 'shellcheck'
+brew 'tcptraceroute'
+brew 'tmux'
+brew 'tor'
+brew 'unrar'
+brew 'vim'
+brew 'xz'
+brew 'ykman'
+brew 'zstd'
+
+if OS.mac?
+  brew 'bash'
+  brew 'mas'
+  brew 'opensc'
+  brew 'reattach-to-user-namespace'
+end
+
+if OS.linux?
+  brew 'neomutt'
+  brew 'pass'
+  brew 'zsh'
+end
+
+## Mac Apps
+cask 'appcleaner'
+cask 'bettertouchtool'
+# Chrome has to go under /Applications for 1Password's signature verification
+cask 'google-chrome-beta', args: { appdir: '/Applications' }
+cask 'iterm2'
+cask 'keepingyouawake'
+cask 'tor-browser-alpha'
+
+## App Store
+mas '1Blocker', id: 1107421413
+mas '1Password', id: 443987910
+mas 'The Unarchiver', id: 425424353
+mas 'WireGuard', id: 1451685025
+
+## Fonts
+cask 'font-go-mono'
