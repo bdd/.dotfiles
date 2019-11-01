@@ -1,5 +1,17 @@
-#!/$PREFIX/bin/bash
-set -euo pipefail
+# Setup preferred environment in Termux
+#
+# Option 1: Execute
+# Run `bash termux.sh` and when it finishes restart Termux for
+#
+# Option 2: Source
+# Run `source termux.sh` to replace running bash with zsh at the end
+
+# shellcheck shell=bash
+if [[ $SHLVL -gt 1 ]]; then
+  # Be strict only when executing as a subshell.
+  # We don't want to kill login shell for errors when we're `source`d
+  set -euo pipefail
+fi
 
 PKGS=(
   curl
@@ -41,4 +53,4 @@ ln -s "${PREFIX}"/bin/vim ~/bin/termux-file-editor
 
 # switch to zsh
 chsh -s zsh
-exec zsh
+[[ $SHLVL -eq 1 ]] && exec zsh || echo "Ready to restart."
