@@ -22,6 +22,7 @@ PKGS=(
   man
   mosh
   msmtp
+  ncurses-utils
   nmap
   openssh
   openssl-tool
