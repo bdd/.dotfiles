@@ -6,11 +6,8 @@
 # Run Homebrew Bundle to install everything below:
 # % brew bundle
 
-tap 'homebrew/core'
-tap 'homebrew/bundle'
-tap 'caskroom/cask'
-tap 'caskroom/fonts'
-tap 'caskroom/versions'
+tap 'homebrew/cask-fonts'
+tap 'homebrew/cask-versions' # for google-chrome-beta, tor-browser-alpha, etc.
 cask_args appdir: '~/Applications'
 
 brew 'fzf'
@@ -58,7 +55,7 @@ cask 'tor-browser-alpha'
 
 ## App Store
 mas '1Blocker', id: 1107421413
-mas '1Password', id: 443987910
+mas '1Password 7', id: 1333542190
 mas 'The Unarchiver', id: 425424353
 mas 'WireGuard', id: 1451685025
 

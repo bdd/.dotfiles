@@ -6,7 +6,7 @@ Version
 Target version is Emacs 25.1 running on macOS and Linux.
 
 ### macOS
-Install with [Homebrew] [Cask]
+Install with [Homebrew] Cask
 
     brew cask install emacs
 
@@ -31,4 +31,3 @@ M-x list-packages <RET> U <RET> x <RET>
 
 [bdd]: https://bdd.fi
 [Homebrew]: https://brew.sh
-[Cask]: https://caskroom.github.io

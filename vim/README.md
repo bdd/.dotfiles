@@ -24,10 +24,10 @@ have them.  Under macOS, Monaco—the default monospaced typeface, doesn't have
 italics, but Menlo does.
 
 I find [Go Mono family] to be delightful both in the terminal and GUI.  If you
-use [Homebrew], you can install them from 'caskroom/fonts' Homebrew Tap.
+use [Homebrew], you can install them from 'homebrew/cask-fonts' Homebrew Tap.
 
 ```
-% brew tap caskroom/fonts
+% brew tap homebrew/cask-fonts
 % brew cask install font-go-mono
 ```
 
