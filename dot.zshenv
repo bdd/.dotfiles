@@ -2,7 +2,7 @@
 #
 # We only set exported environment variables here, thus no need to continue
 # evaluation under a nested shell.
-if [[ $SHLVL -gt 1 ]]; then return; fi
+if ((SHLVL > 1)); then return; fi
 
 # Build PATH on top of a preferred list and append directories from pre-RC
 # evaluation PATH variable.

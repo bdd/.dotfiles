@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # Setup preferred environment in Termux
 #
 # Option 1: Execute
@@ -6,8 +8,7 @@
 # Option 2: Source
 # Run `source termux.sh` to replace running bash with zsh at the end
 
-# shellcheck shell=bash
-if [[ $SHLVL -gt 1 ]]; then
+if ((SHLVL > 1)); then
   # Be strict only when executing as a subshell.
   # We don't want to kill login shell for errors when we're `source`d
   set -euo pipefail
@@ -54,4 +55,4 @@ ln -s "${PREFIX}"/bin/vim ~/bin/termux-file-editor
 
 # switch to zsh
 chsh -s zsh
-[[ $SHLVL -eq 1 ]] && exec zsh || echo "Ready to restart."
+((SHLVL == 1)) && exec zsh || echo "Ready to restart."

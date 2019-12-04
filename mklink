@@ -24,7 +24,7 @@ link() {
 
   source="${HERE}/$1"
 
-  if [[ $# -eq 1 ]]; then
+  if (($# == 1)); then
     target="${HOME}/$1"
   else
     target="${HOME}/$2"
@@ -80,7 +80,7 @@ usage() {
 HERE="$(cd "$(dirname "$0")"; pwd -P)"  # ugly but portable
 PHONY=(all dotfiles dotconfig)
 
-[[ $# -lt 1 || $# -gt 2 ]] && usage
+(($# != 0 && $# <= 2)) || usage
 
 if in_array "$1" "${PHONY[@]}"; then
   link:$1

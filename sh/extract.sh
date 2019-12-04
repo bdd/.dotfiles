@@ -20,7 +20,7 @@ extract() {
 
   shift $((OPTIND - 1))
 
-  if [[ $# -lt 1 ]]; then
+  if (($# == 0)); then
     echo "${__usage__}" >&2
     return 64 # EX_USAGE
   fi

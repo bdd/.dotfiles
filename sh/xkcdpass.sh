@@ -6,7 +6,7 @@ xkcdpass() {
   if [[ -n ${BASH_VERSION-} ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
   local __usage__="Usage: ${fn} [nwords]"
 
-  if [[ $# -gt 0 ]]; then
+  if (($# > 0)); then
     if [[ "$1" =~ ^[0-9]+$ ]]; then
       nwords=$1
     else

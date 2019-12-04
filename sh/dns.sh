@@ -32,7 +32,7 @@ dns-lg() {
 
   shift $((OPTIND - 1))
 
-  if [[ $# -lt 1 || $# -gt 2 ]]; then
+  if  (($# == 0 || $# > 2)); then
     echo "${__usage__}" >&2
     return 64 # EX_USAGE
   fi
