@@ -1,27 +1,10 @@
 # shellcheck shell=bash
 xkcdpass() {
-  local capitalize=false
-  local separator='space'
   local nwords=4
+  local passphrase=()
 
   if [[ -n ${BASH_VERSION-} ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
-  local __usage__="Usage: ${fn} [-C] [-d | -s] [nwords]"
-
-  local opt OPTIND=1
-  while getopts ':cds' opt; do
-    case ${opt} in
-      c) capitalize=true ;;
-      d) separator='digit' ;;
-      s) separator='symbol' ;;
-      *)
-        echo "Unrecognized option -${OPTARG}" >&2
-        echo "${__usage__}" >&2
-        return 64 # EX_USAGE
-        ;;
-    esac
-  done
-
-  shift $((OPTIND - 1))
+  local __usage__="Usage: ${fn} [nwords]"
 
   if [[ $# -gt 0 ]]; then
     if [[ "$1" =~ ^[0-9]+$ ]]; then
@@ -32,66 +15,69 @@ xkcdpass() {
     fi
   fi
 
-  # Seed RANDOM with a 32-bit unsigned integer from /dev/urandom
-  local urandom='/dev/urandom'
-  if [[ -r "${urandom}" ]]; then
-    # Whoa! What's going on with 'od'?
-    #  -t u4: unsigned 4 byte
-    #  -N 4: print in 4 byte chunks
-    #  -A n: do not print addresses, just the input
-    #  -v: if there's repeated data, print verbatim instead of '*'
-    RANDOM=$(od -t u4 -N 4 -A n -v < "${urandom}" | tr -d ' ')
-  else
-    echo "fatal: no ${urandom} to seed RANDOM"
-    return 72 # EX_OSFILE
+  for i in $(_xkcdpass:usample "${nwords}" ${#XKCDPASS_WORDLIST[@]}); do
+    # usample interval is [0, array_sz) so results can be used as array indexes.
+    # Bash uses 0 indexed arrays but Zsh arrays are indexed from 1.
+    # OTOH negative indexes behave the same for both shells.
+    # *lightbulb*
+    (( i = -(i+1) ))
+    passphrase+=("${XKCDPASS_WORDLIST[$((-(i+1)))]}")
+  done
+
+  echo "${passphrase[@]}"
+}
+
+_xkcdpass:usample() {
+  local num=$1 max=$2
+  # Returns `num` uniformly distributed pseudorandom integers from [0, `max`) half-closed interval.
+  #
+  # Why bother? As we need to use modulo operation to map random integers to specified
+  # interval, we risk biasing if `max_random_int_value % max != 0`.
+  #
+  # More on this:
+  # https://nakedsecurity.sophos.com/2013/07/09/anatomy-of-a-pseudorandom-number-generator-visualising-cryptocats-buggy-prng/
+
+  # Shell numeric values are signed and underlying architecture register size.
+  # hexdump(1) supports formatting 8, 16, 32, 64 integers.
+  # This is why we limit `max` to 32-bits.
+  if ((max > 2**32)); then
+    echo "max cannot be larger than 2^32."
+    return 1
   fi
 
-  local passphrase i
-  for ((i=1; i <= nwords; i++)); do
-    local x=$((RANDOM % ${#XKCDPASS_WORDLIST[@]}))
-    if [[ -n ${ZSH_VERSION-} ]]; then
-      ((x++)) # zsh arrays start from index 1
-    fi
-
-    local word=${XKCDPASS_WORDLIST[x]}
-
-    if ${capitalize}; then
-      if [[ -n ${ZSH_VERSION-} ]]; then
-        # Zsh
-        # shellcheck disable=SC2154
-        word=${(C)word}
-      else
-        # Bash
-        word=${word^}
-      fi
-    fi
-
-    passphrase+=${word}
-
-    if [[ $i -lt ${nwords} ]]; then
-      passphrase+=$(_xkcdpass:separator ${separator})
+  # Based on `max` decide if we need to read 1, 2, or 4 bytes per integer.
+  local intsize intmax
+  for intsize in 1 2 4; do
+    intmax=$((2**(8*intsize) - 1)) # max value of `intsize`-byte integer.
+    if ((intmax >= (max - 1) )); then
+      # `max - 1` is the largest integer _in_ the interval and it can be encoded
+      # with _at least_ this size of integral type.
+      break
     fi
   done
 
-  echo "${passphrase}"
-}
+  # We need `num * intsize` random bytes but we may reject some integers to avoid bias.
+  # Pessimistically read twice the amount we need.
+  local readlen=$((intsize * num * 2))
+  # A 'fencepost' in our parlance is the largest integer congruent to 0 modulo `max`.
+  # We reject it and anything larger.
+  local fencepost=$((intmax - (intmax % max)))
 
-_xkcdpass:separator() {
-  local symbols=('/' '|' '$' '%' '*' '#' '@' '!')
-
-  case "$1" in
-    digit) echo $((RANDOM % 10)) ;;
-    symbol)
-      local i=$((RANDOM % ${#symbols[@]}))
-
-      if [[ -n ${ZSH_VERSION-} ]]; then
-        ((i++)) # zsh arrays start from index 1
+  while true; do
+    local i picks=()
+    for i in $(hexdump -n ${readlen} -e "${readlen}/${intsize} \"%u \"" /dev/urandom); do
+      if ((i < fencepost)); then
+        picks+=($((i % max)))
+        if ((${#picks[@]} == num)); then
+          echo "${picks[@]}"
+          return
+        fi
       fi
+    done
 
-      echo "${symbols[i]}"
-      ;;
-    *) echo ' ' ;;
-  esac
+    # NOT REACHED unless more than half of the integers were rejected.
+    # If this happens we retry with a whole new set of random integers.
+  done
 }
 
 # shellcheck disable=SC1010 # ignore words that happen to be shell keywords.
