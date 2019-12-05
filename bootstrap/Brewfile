@@ -20,6 +20,7 @@ brew 'mtr'
 brew 'nmap'
 brew 'openssl'
 brew 'parallel'
+brew 'pass'
 brew 'ripgrep'
 brew 'shellcheck'
 brew 'tcptraceroute'
@@ -40,7 +41,6 @@ end
 
 if OS.linux?
   brew 'neomutt'
-  brew 'pass'
   brew 'zsh'
 end
 
