@@ -27,6 +27,37 @@ xkcdpass() {
   echo "${passphrase[@]}"
 }
 
+xkcdpass:maxlen() {
+  # Generate an xkcd password with a length limit
+  #
+  # Generates passwords until the output is shorter than or equal to first
+  # argument, `maxlen`. Optional second parameter specifies the number of words
+  # used to generate the passphrase. Optional third parameter specifies the
+  # maximum number of tries before giving up.
+  #
+  # If output is going to a TTY, prints a '*' for every 100 tries.
+  local maxlen=${1:-20}
+  local nwords=$2
+  local maxtries=${3:-1000}
+
+  # is stdout a tty or a pipe?
+  if [[ -t 1 ]]; then local isatty=1; else local isatty=0; fi
+
+  local passphrase tries=0
+  while ((tries < maxtries)); do
+    passphrase=$(xkcdpass ${nwords:+${nwords}}) || return 70 # EX_SOFTWARE
+    if ((${#passphrase} <= maxlen)); then
+      if ((isatty == 1 && tries >= 100)); then echo; fi
+      echo "${passphrase}"
+      return
+    fi
+    ((tries++))
+    if ((isatty == 1 && tries % 100 == 0)); then echo -n "*"; fi
+  done
+
+  return 1 # exhausted
+}
+
 _xkcdpass:usample() {
   local num=$1 max=$2
   # Returns `num` uniformly distributed pseudorandom integers from [0, `max`) half-closed interval.
