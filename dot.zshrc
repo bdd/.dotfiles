@@ -57,6 +57,7 @@ alias -g G='| grep -F --color=auto'
 alias -g L='| less -RS'
 alias -g S='| sort'
 alias -g WC='| wc -l'
+alias -g CP='| termclip'
 
 # Command Aliases
 alias h=history
@@ -65,8 +66,6 @@ alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
 # OS specific aliases and directory hashes
 if [[ $OSTYPE =~ ^darwin ]]; then
-  alias -g CP='| pbcopy'
-
   hash -d D=~/Desktop
   hash -d d=~/Downloads
   hash -d a=~/Applications
