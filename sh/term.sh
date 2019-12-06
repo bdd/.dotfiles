@@ -30,7 +30,7 @@ term:clip() {
     return 69 # EX_UNAVAILABLE
   fi
 
-  print "\e]52;c;%s\a" "${b64}"
+  printf "\e]52;c;%s\a" "${b64}"
 }
 
 termclip() {
