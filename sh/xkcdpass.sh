@@ -3,22 +3,25 @@ xkcdpass() {
   local nwords=4
   local passphrase=()
 
-  if [[ -n ${BASH_VERSION-} ]]; then local fn=${FUNCNAME[0]}; else local fn=$0; fi
-  local __usage__="Usage: ${fn} [nwords]"
-
   if (($# > 0)); then
     if [[ "$1" =~ ^[0-9]+$ ]]; then
       nwords=$1
     else
-      echo "${__usage__}" >&2
+      if [[ -n ${BASH_VERSION-} ]]; then
+        local fn=${FUNCNAME[0]}
+      else
+        local fn=$0
+      fi
+      echo "Usage: ${fn} [nwords]" >&2
       return 64 # EX_USAGE
     fi
   fi
 
   for i in $(_xkcdpass:usample "${nwords}" ${#XKCDPASS_WORDLIST[@]}); do
-    # usample interval is [0, array_sz) so results can be used as array indexes.
-    # Bash uses 0 indexed arrays but Zsh arrays are indexed from 1.
-    # OTOH negative indexes behave the same for both shells.
+    # usample interval is [0, array_sz) so results can be used as array indices
+    # where 0-based indexing is employed. Bash arrays are 0-based but Zsh's are
+    # 1-based.
+    # OTOH negative indexes (from tail) behave the same for both shells.
     # *lightbulb*
     (( i = -(i+1) ))
     passphrase+=("${XKCDPASS_WORDLIST[$((-(i+1)))]}")
@@ -68,7 +71,7 @@ _xkcdpass:usample() {
   # More on this:
   # https://nakedsecurity.sophos.com/2013/07/09/anatomy-of-a-pseudorandom-number-generator-visualising-cryptocats-buggy-prng/
 
-  # Shell numeric values are signed and underlying architecture register size.
+  # Shell numeric values are signed and underlying architecture register sized.
   # hexdump(1) supports formatting 8, 16, 32, 64 integers.
   # This is why we limit `max` to 32-bits.
   if ((max > 2**32)); then
