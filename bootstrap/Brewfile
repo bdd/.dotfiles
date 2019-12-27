@@ -35,7 +35,6 @@ brew 'zstd'
 if OS.mac?
   brew 'bash'
   brew 'mas'
-  brew 'opensc'
   brew 'reattach-to-user-namespace'
 end
 
