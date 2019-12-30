@@ -114,139 +114,181 @@ _xkcdpass:usample() {
   done
 }
 
+# BIP39 English
+# from https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt
 # shellcheck disable=SC1010 # ignore words that happen to be shell keywords.
 XKCDPASS_WORDLIST=(
-  ability able aboard about above accept accident according account accurate acres across act action
-  active activity actual actually add addition additional adjective adult adventure advice affect
-  afraid after afternoon again against age ago agree ahead aid air airplane alike alive all allow
-  almost alone along aloud alphabet already also although am among amount ancient angle angry animal
-  announced another answer ants any anybody anyone anything anyway anywhere apart apartment
-  appearance apple applied appropriate are area arm army around arrange arrangement arrive arrow art
-  article as aside ask asleep at ate atmosphere atom atomic attached attack attempt attention
-  audience author automobile available average avoid aware away baby back bad badly bag balance ball
-  balloon band bank bar bare bark barn base baseball basic basis basket bat battle be bean bear beat
-  beautiful beauty became because become becoming bee been before began beginning begun behavior
-  behind being believed bell belong below belt bend beneath bent beside best bet better between
-  beyond bicycle bigger biggest bill birds birth birthday bit bite black blank blanket blew blind
-  block blood blow blue board boat body bone book border born both bottle bottom bound bow bowl box
-  boy brain branch brass brave bread break breakfast breath breathe breathing breeze brick bridge
-  brief bright bring broad broke broken brother brought brown brush buffalo build building built
-  buried burn burst bus bush business busy but butter buy by cabin cage cake call calm came camera
-  camp can canal cannot cap capital captain captured car carbon card care careful carefully carried
-  carry case cast castle cat catch cattle caught cause cave cell cent center central century certain
-  certainly chain chair chamber chance change changing chapter character characteristic charge chart
-  check cheese chemical chest chicken chief child children choice choose chose chosen church circle
-  circus citizen city class classroom claws clay clean clear clearly climate climb clock close
-  closely closer cloth clothes clothing cloud club coach coal coast coat coffee cold collect college
-  colony color column combination combine come comfortable coming command common community company
-  compare compass complete completely complex composed composition compound concerned condition
-  congress connected consider consist consonant constantly construction contain continent continued
-  contrast control conversation cook cookies cool copper copy corn corner correct correctly cost
-  cotton could count country couple courage course court cover cow cowboy crack cream create
-  creature crew crop cross crowd cry cup curious current curve customs cut cutting daily damage
-  dance danger dangerous dark darkness date daughter dawn day dead deal dear death decide declared
-  deep deeply deer definition degree depend depth describe desert design desk detail determine
-  develop development diagram diameter did die differ difference different difficult difficulty dig
-  dinner direct direction directly dirt dirty disappear discover discovery discuss discussion
-  disease dish distance distant divide division do doctor does dog doing doll dollar done donkey
-  door dot double doubt down dozen draw drawn dream dress drew dried drink drive driven driver
-  driving drop dropped drove dry duck due dug dull during dust duty each eager ear earlier early
-  earn earth easier easily east easy eat eaten edge education effect effort egg eight either
-  electric electricity element elephant eleven else empty end enemy energy engine engineer enjoy
-  enough enter entire entirely environment equal equally equator equipment escape especially
-  essential establish even evening event eventually ever every everybody everyone everything
-  everywhere evidence exact exactly examine example excellent except exchange excited excitement
-  exciting exclaimed exercise exist expect experience experiment explain explanation explore express
-  expression extra eye face facing fact factor factory failed fair fairly fall fallen familiar
-  family famous far farm farmer farther fast fastened faster fat father favorite fear feathers
-  feature fed feed feel feet fell fellow felt fence few fewer field fierce fifteen fifth fifty fight
-  fighting figure fill film final finally find fine finest finger finish fire fireplace firm first
-  fish five fix flag flame flat flew flies flight floating floor flow flower fly fog folks follow
-  food foot football for force foreign forest forget forgot forgotten form former fort forth forty
-  forward fought found four fourth fox frame free freedom frequently fresh friend friendly frighten
-  frog from front frozen fruit fuel full fully fun function funny fur furniture further future gain
-  game garage garden gas gasoline gate gather gave general generally gentle gently get getting giant
-  gift girl give given giving glad glass globe go goes gold golden gone good goose got government
-  grabbed grade gradually grain grandfather grandmother graph grass gravity gray great greater
-  greatest greatly green grew ground group grow grown growth guard guess guide gulf gun habit had
-  hair half halfway hall hand handle handsome hang happen happened happily happy harbor hard harder
-  hardly has hat have having hay he headed heading health heard hearing heart heat heavy height held
-  hello help helpful her herd here herself hidden hide high higher highest highway hill him himself
-  his history hit hold hole hollow home honor hope horn horse hospital hot hour house how however
-  huge human hundred hung hungry hunt hunter hurried hurry hurt husband ice idea identity if ill
-  image imagine immediately importance important impossible improve in inch include including income
-  increase indeed independent indicate individual industrial industry influence information inside
-  instance instant instead instrument interest interior into introduced invented involved iron is
-  island it its itself jack jar jet job join joined journey joy judge jump jungle just keep kept key
-  kids kill kind kitchen knew knife know knowledge known label labor lack lady laid lake lamp land
-  language large larger largest last late later laugh law lay layers lead leader leaf learn least
-  leather leave leaving led left leg length lesson let letter level library lie life lift light like
-  likely limited line lion lips liquid list listen little live living load local locate location log
-  lonely long longer look loose lose loss lost lot loud love lovely low lower luck lucky lunch lungs
-  lying machine machinery mad made magic magnet mail main mainly major make making man managed
-  manner manufacturing many map mark market married mass massage master material mathematics matter
-  may maybe me meal mean means meant measure meat medicine meet melted member memory men mental
-  merely met metal method mice middle might mighty mile military milk mill mind mine minerals minute
-  mirror missing mission mistake mix mixture model modern molecular moment money monkey month mood
-  moon more morning most mostly mother motion motor mountain mouse mouth move movement movie moving
-  mud muscle music musical must my myself mysterious nails name nation national native natural
-  naturally nature near nearby nearer nearest nearly necessary neck needed needle needs negative
-  neighbor neighborhood nervous nest never new news newspaper next nice night nine no nobody nodded
-  noise none noon nor north nose not note noted nothing notice noun now number numeral nuts object
-  observe obtain occasionally occur ocean of off offer office officer official oil old older oldest
-  on once one only onto open operation opinion opportunity opposite or orange orbit order ordinary
-  organization organized origin original other ought our ourselves out outer outline outside over
-  own owner oxygen pack package page paid pain paint pair palace pale pan paper paragraph parallel
-  parent park part particles particular particularly partly parts party pass passage past path
-  pattern pay peace pen pencil people per percent perfect perfectly perhaps period person personal
-  pet phrase physical piano pick picture pictured pie piece pig pile pilot pine pink pipe pitch
-  place plain plan plane planet planned planning plant plastic plate plates play pleasant please
-  pleasure plenty plural plus pocket poem poet poetry point pole police policeman political pond
-  pony pool poor popular population porch port position positive possible possibly post pot potatoes
-  pound pour powder power powerful practical practice prepare present president press pressure
-  pretty prevent previous price pride primitive principal principle printed private prize probably
-  problem process produce product production program progress promised proper properly property
-  protection proud prove provide public pull pupil pure purple purpose push put putting quarter
-  queen question quick quickly quiet quietly quite rabbit race radio railroad rain raise ran ranch
-  range rapidly rate rather raw rays reach read reader ready real realize rear reason recall receive
-  recent recently recognize record red refer refused region regular related relationship religious
-  remain remarkable remember remove repeat replace replied report represent require research respect
-  rest result return review rhyme rhythm rice rich ride riding right ring rise rising river road
-  roar rock rocket rocky rod roll roof room root rope rose rough round route row rubbed rubber rule
-  ruler run running rush sad saddle safe safety said sail sale salmon salt same sand sang sat
-  satellites satisfied save saved saw say scale scared scene school science scientific scientist
-  score screen sea search season seat second secret section see seed seeing seems seen seldom select
-  selection sell send sense sent sentence separate series serious serve service sets setting settle
-  settlers seven several shade shadow shake shaking shall shallow shape share sharp she sheep sheet
-  shelf shells shelter shine shinning ship shirt shoe shoot shop shore short shorter shot should
-  shoulder shout show shown shut sick sides sight sign signal silence silent silk silly silver
-  similar simple simplest simply since sing single sink sister sit sitting situation six size skill
-  skin sky slabs slave sleep slept slide slight slightly slip slipped slope slow slowly small
-  smaller smallest smell smile smoke smooth snake snow so soap social society soft softly soil solar
-  sold soldier solid solution solve some somebody somehow someone something sometime somewhere son
-  song soon sort sound source south southern space speak special species specific speech speed spell
-  spend spent spider spin spirit spite split spoken sport spread spring square stage stairs stand
-  standard star stared start state statement station stay steady steam steel steep stems step
-  stepped stick stiff still stock stomach stone stood stop stopped store storm story stove straight
-  strange stranger straw stream street strength stretch strike string strip strong stronger struck
-  structure struggle stuck student studied studying subject substance success successful such sudden
-  suddenly sugar suggest suit sum summer sun sunlight supper supply support suppose sure surface
-  surprise surrounded swam sweet swept swim swimming swing swung syllable symbol system table tail
-  take taken tales talk tall tank tape task taste taught tax tea teach teacher team tears teeth
-  telephone television tell temperature ten tent term terrible test than thank that thee them
-  themselves then theory there therefore these they thick thin thing think third thirty this those
-  thou though thought thousand thread three threw throat through throughout throw thrown thumb thus
-  thy tide tie tight tightly till time tin tiny tip tired title to tobacco today together told
-  tomorrow tone tongue tonight too took tool top topic torn total touch toward tower town toy trace
-  track trade traffic trail train transportation trap travel treated tree triangle tribe trick tried
-  trip troops tropical trouble truck trunk truth try tube tune turn twelve twenty twice two type
-  typical uncle under underline understanding unhappy union unit universe unknown unless until
-  unusual up upon upper upward us use useful using usual usually valley valuable value vapor variety
-  various vast vegetable verb vertical very vessels victory view village visit visitor voice volume
-  vote vowel voyage wagon wait walk wall want war warm warn was wash waste watch water wave way we
-  weak wealth wear weather week weigh weight welcome well went were west western wet whale what
-  whatever wheat wheel when whenever where wherever whether which while whispered whistle white who
-  whole whom whose why wide widely wife wild will willing win wind window wing winter wire wise wish
-  with within without wolf women won wonder wonderful wood wooden wool word wore work worker world
-  worried worry worse worth would wrapped write writer writing written wrong wrote yard year yellow
-  yes yesterday yet you young younger your yourself youth zero zoo)
+  abandon ability able about above absent absorb abstract absurd abuse access
+  accident account accuse achieve acid acoustic acquire across act action actor
+  actress actual adapt add addict address adjust admit adult advance advice
+  aerobic affair afford afraid again age agent agree ahead aim air airport aisle
+  alarm album alcohol alert alien all alley allow almost alone alpha already
+  also alter always amateur amazing among amount amused analyst anchor ancient
+  anger angle angry animal ankle announce annual another answer antenna antique
+  anxiety any apart apology appear apple approve april arch arctic area arena
+  argue arm armed armor army around arrange arrest arrive arrow art artefact
+  artist artwork ask aspect assault asset assist assume asthma athlete atom
+  attack attend attitude attract auction audit august aunt author auto autumn
+  average avocado avoid awake aware away awesome awful awkward axis baby
+  bachelor bacon badge bag balance balcony ball bamboo banana banner bar barely
+  bargain barrel base basic basket battle beach bean beauty because become beef
+  before begin behave behind believe below belt bench benefit best betray better
+  between beyond bicycle bid bike bind biology bird birth bitter black blade
+  blame blanket blast bleak bless blind blood blossom blouse blue blur blush
+  board boat body boil bomb bone bonus book boost border boring borrow boss
+  bottom bounce box boy bracket brain brand brass brave bread breeze brick
+  bridge brief bright bring brisk broccoli broken bronze broom brother brown
+  brush bubble buddy budget buffalo build bulb bulk bullet bundle bunker burden
+  burger burst bus business busy butter buyer buzz cabbage cabin cable cactus
+  cage cake call calm camera camp can canal cancel candy cannon canoe canvas
+  canyon capable capital captain car carbon card cargo carpet carry cart case
+  cash casino castle casual cat catalog catch category cattle caught cause
+  caution cave ceiling celery cement census century cereal certain chair chalk
+  champion change chaos chapter charge chase chat cheap check cheese chef cherry
+  chest chicken chief child chimney choice choose chronic chuckle chunk churn
+  cigar cinnamon circle citizen city civil claim clap clarify claw clay clean
+  clerk clever click client cliff climb clinic clip clock clog close cloth cloud
+  clown club clump cluster clutch coach coast coconut code coffee coil coin
+  collect color column combine come comfort comic common company concert conduct
+  confirm congress connect consider control convince cook cool copper copy coral
+  core corn correct cost cotton couch country couple course cousin cover coyote
+  crack cradle craft cram crane crash crater crawl crazy cream credit creek crew
+  cricket crime crisp critic crop cross crouch crowd crucial cruel cruise
+  crumble crunch crush cry crystal cube culture cup cupboard curious current
+  curtain curve cushion custom cute cycle dad damage damp dance danger daring
+  dash daughter dawn day deal debate debris decade december decide decline
+  decorate decrease deer defense define defy degree delay deliver demand demise
+  denial dentist deny depart depend deposit depth deputy derive describe desert
+  design desk despair destroy detail detect develop device devote diagram dial
+  diamond diary dice diesel diet differ digital dignity dilemma dinner dinosaur
+  direct dirt disagree discover disease dish dismiss disorder display distance
+  divert divide divorce dizzy doctor document dog doll dolphin domain donate
+  donkey donor door dose double dove draft dragon drama drastic draw dream dress
+  drift drill drink drip drive drop drum dry duck dumb dune during dust dutch
+  duty dwarf dynamic eager eagle early earn earth easily east easy echo ecology
+  economy edge edit educate effort egg eight either elbow elder electric elegant
+  element elephant elevator elite else embark embody embrace emerge emotion
+  employ empower empty enable enact end endless endorse enemy energy enforce
+  engage engine enhance enjoy enlist enough enrich enroll ensure enter entire
+  entry envelope episode equal equip era erase erode erosion error erupt escape
+  essay essence estate eternal ethics evidence evil evoke evolve exact example
+  excess exchange excite exclude excuse execute exercise exhaust exhibit exile
+  exist exit exotic expand expect expire explain expose express extend extra eye
+  eyebrow fabric face faculty fade faint faith fall false fame family famous fan
+  fancy fantasy farm fashion fat fatal father fatigue fault favorite feature
+  february federal fee feed feel female fence festival fetch fever few fiber
+  fiction field figure file film filter final find fine finger finish fire firm
+  first fiscal fish fit fitness fix flag flame flash flat flavor flee flight
+  flip float flock floor flower fluid flush fly foam focus fog foil fold follow
+  food foot force forest forget fork fortune forum forward fossil foster found
+  fox fragile frame frequent fresh friend fringe frog front frost frown frozen
+  fruit fuel fun funny furnace fury future gadget gain galaxy gallery game gap
+  garage garbage garden garlic garment gas gasp gate gather gauge gaze general
+  genius genre gentle genuine gesture ghost giant gift giggle ginger giraffe
+  girl give glad glance glare glass glide glimpse globe gloom glory glove glow
+  glue goat goddess gold good goose gorilla gospel gossip govern gown grab grace
+  grain grant grape grass gravity great green grid grief grit grocery group grow
+  grunt guard guess guide guilt guitar gun gym habit hair half hammer hamster
+  hand happy harbor hard harsh harvest hat have hawk hazard head health heart
+  heavy hedgehog height hello helmet help hen hero hidden high hill hint hip
+  hire history hobby hockey hold hole holiday hollow home honey hood hope horn
+  horror horse hospital host hotel hour hover hub huge human humble humor
+  hundred hungry hunt hurdle hurry hurt husband hybrid ice icon idea identify
+  idle ignore ill illegal illness image imitate immense immune impact impose
+  improve impulse inch include income increase index indicate indoor industry
+  infant inflict inform inhale inherit initial inject injury inmate inner
+  innocent input inquiry insane insect inside inspire install intact interest
+  into invest invite involve iron island isolate issue item ivory jacket jaguar
+  jar jazz jealous jeans jelly jewel job join joke journey joy judge juice jump
+  jungle junior junk just kangaroo keen keep ketchup key kick kid kidney kind
+  kingdom kiss kit kitchen kite kitten kiwi knee knife knock know lab label
+  labor ladder lady lake lamp language laptop large later latin laugh laundry
+  lava law lawn lawsuit layer lazy leader leaf learn leave lecture left leg
+  legal legend leisure lemon lend length lens leopard lesson letter level liar
+  liberty library license life lift light like limb limit link lion liquid list
+  little live lizard load loan lobster local lock logic lonely long loop lottery
+  loud lounge love loyal lucky luggage lumber lunar lunch luxury lyrics machine
+  mad magic magnet maid mail main major make mammal man manage mandate mango
+  mansion manual maple marble march margin marine market marriage mask mass
+  master match material math matrix matter maximum maze meadow mean measure meat
+  mechanic medal media melody melt member memory mention menu mercy merge merit
+  merry mesh message metal method middle midnight milk million mimic mind
+  minimum minor minute miracle mirror misery miss mistake mix mixed mixture
+  mobile model modify mom moment monitor monkey monster month moon moral more
+  morning mosquito mother motion motor mountain mouse move movie much muffin
+  mule multiply muscle museum mushroom music must mutual myself mystery myth
+  naive name napkin narrow nasty nation nature near neck need negative neglect
+  neither nephew nerve nest net network neutral never news next nice night noble
+  noise nominee noodle normal north nose notable note nothing notice novel now
+  nuclear number nurse nut oak obey object oblige obscure observe obtain obvious
+  occur ocean october odor off offer office often oil okay old olive olympic
+  omit once one onion online only open opera opinion oppose option orange orbit
+  orchard order ordinary organ orient original orphan ostrich other outdoor
+  outer output outside oval oven over own owner oxygen oyster ozone pact paddle
+  page pair palace palm panda panel panic panther paper parade parent park
+  parrot party pass patch path patient patrol pattern pause pave payment peace
+  peanut pear peasant pelican pen penalty pencil people pepper perfect permit
+  person pet phone photo phrase physical piano picnic picture piece pig pigeon
+  pill pilot pink pioneer pipe pistol pitch pizza place planet plastic plate
+  play please pledge pluck plug plunge poem poet point polar pole police pond
+  pony pool popular portion position possible post potato pottery poverty powder
+  power practice praise predict prefer prepare present pretty prevent price
+  pride primary print priority prison private prize problem process produce
+  profit program project promote proof property prosper protect proud provide
+  public pudding pull pulp pulse pumpkin punch pupil puppy purchase purity
+  purpose purse push put puzzle pyramid quality quantum quarter question quick
+  quit quiz quote rabbit raccoon race rack radar radio rail rain raise rally
+  ramp ranch random range rapid rare rate rather raven raw razor ready real
+  reason rebel rebuild recall receive recipe record recycle reduce reflect
+  reform refuse region regret regular reject relax release relief rely remain
+  remember remind remove render renew rent reopen repair repeat replace report
+  require rescue resemble resist resource response result retire retreat return
+  reunion reveal review reward rhythm rib ribbon rice rich ride ridge rifle
+  right rigid ring riot ripple risk ritual rival river road roast robot robust
+  rocket romance roof rookie room rose rotate rough round route royal rubber
+  rude rug rule run runway rural sad saddle sadness safe sail salad salmon salon
+  salt salute same sample sand satisfy satoshi sauce sausage save say scale scan
+  scare scatter scene scheme school science scissors scorpion scout scrap screen
+  script scrub sea search season seat second secret section security seed seek
+  segment select sell seminar senior sense sentence series service session
+  settle setup seven shadow shaft shallow share shed shell sheriff shield shift
+  shine ship shiver shock shoe shoot shop short shoulder shove shrimp shrug
+  shuffle shy sibling sick side siege sight sign silent silk silly silver
+  similar simple since sing siren sister situate six size skate sketch ski skill
+  skin skirt skull slab slam sleep slender slice slide slight slim slogan slot
+  slow slush small smart smile smoke smooth snack snake snap sniff snow soap
+  soccer social sock soda soft solar soldier solid solution solve someone song
+  soon sorry sort soul sound soup source south space spare spatial spawn speak
+  special speed spell spend sphere spice spider spike spin spirit split spoil
+  sponsor spoon sport spot spray spread spring spy square squeeze squirrel
+  stable stadium staff stage stairs stamp stand start state stay steak steel
+  stem step stereo stick still sting stock stomach stone stool story stove
+  strategy street strike strong struggle student stuff stumble style subject
+  submit subway success such sudden suffer sugar suggest suit summer sun sunny
+  sunset super supply supreme sure surface surge surprise surround survey
+  suspect sustain swallow swamp swap swarm swear sweet swift swim swing switch
+  sword symbol symptom syrup system table tackle tag tail talent talk tank tape
+  target task taste tattoo taxi teach team tell ten tenant tennis tent term test
+  text thank that theme then theory there they thing this thought three thrive
+  throw thumb thunder ticket tide tiger tilt timber time tiny tip tired tissue
+  title toast tobacco today toddler toe together toilet token tomato tomorrow
+  tone tongue tonight tool tooth top topic topple torch tornado tortoise toss
+  total tourist toward tower town toy track trade traffic tragic train transfer
+  trap trash travel tray treat tree trend trial tribe trick trigger trim trip
+  trophy trouble truck true truly trumpet trust truth try tube tuition tumble
+  tuna tunnel turkey turn turtle twelve twenty twice twin twist two type typical
+  ugly umbrella unable unaware uncle uncover under undo unfair unfold unhappy
+  uniform unique unit universe unknown unlock until unusual unveil update
+  upgrade uphold upon upper upset urban urge usage use used useful useless usual
+  utility vacant vacuum vague valid valley valve van vanish vapor various vast
+  vault vehicle velvet vendor venture venue verb verify version very vessel
+  veteran viable vibrant vicious victory video view village vintage violin
+  virtual virus visa visit visual vital vivid vocal voice void volcano volume
+  vote voyage wage wagon wait walk wall walnut want warfare warm warrior wash
+  wasp waste water wave way wealth weapon wear weasel weather web wedding
+  weekend weird welcome west wet whale what wheat wheel when where whip whisper
+  wide width wife wild will win window wine wing wink winner winter wire wisdom
+  wise wish witness wolf woman wonder wood wool word work world worry worth wrap
+  wreck wrestle wrist write wrong yard year yellow you young youth zebra zero
+  zone zoo
+)
