@@ -7,7 +7,7 @@ function! PreferCmd(...) abort
       return l:cmd
     endif
   endfor
-  return 'echoerr "None in ' . string(a:000) . ' is a valid command."'
+  return printf('echoerr "None in %s is a valid command."', string(a:000))
 endfunction
 
 function! ToggleOpt(opt) abort
