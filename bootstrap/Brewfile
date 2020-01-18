@@ -45,6 +45,7 @@ cask 'tor-browser-alpha'
 ## Fonts
 tap 'homebrew/cask-fonts'
 cask 'font-go-mono'
+cask 'font-jetbrains-mono'
 
 ## App Store Apps
 mas '1Password 7', id: 1333542190
