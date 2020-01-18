@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# https://xkcd.com/936/
+#
+# Generate a passphrase from BIP39 English word list of 2048 (2^11) words.
+# This gives 11 bits of entropy per word.
+
+picks() {
+  # Get 'n' counts of 11-bit integers.
+  local n=$1
+  local r readlen=$((n * 2))
+  for r in $(hexdump -n ${readlen} -e "${readlen}/2 \"%u \"" /dev/urandom); do
+    # Grab 11 LSB of 'r'--a 16-bit unsigned integer.
+    echo "$((r & 0x7FF)) "
+  done
+}
+
+xkcdpass() {
+  local nwords=$1
+  local i passphrase=()
+  for i in $(picks "${nwords}"); do
+    passphrase+=("${WORDLIST[$i]}")
+  done
+
+  echo "${passphrase[@]}"
+}
+
+xkcdpass:maxlen() {
+  # Generate a passphrase with a length limit
+  #
+  # Generates passwords until the output is shorter than or equal to first
+  # argument, `maxlen`. Optional second parameter specifies the number of words
+  # used to generate the passphrase. Optional third parameter specifies the
+  # maximum number of tries before giving up.
+  #
+  # If output is going to a TTY prints a '*' for every 100 tries.
+  local maxlen=$1
+  local nwords=$2
+  local maxtries=${3:-1000}
+
+  # is stdout a tty or a pipe?
+  if [[ -t 1 ]]; then local isatty=1; else local isatty=0; fi
+
+  local passphrase tries=0
+  while ((tries < maxtries)); do
+    passphrase=$(xkcdpass ${nwords:+${nwords}}) || return 70 # EX_SOFTWARE
+    if ((${#passphrase} <= maxlen)); then
+      if ((isatty == 1 && tries >= 100)); then echo; fi
+      echo "${passphrase}"
+      return
+    fi
+    ((tries++))
+    if ((isatty == 1 && tries % 100 == 0)); then echo -n "*"; fi
+  done
+
+  return 1 # exhausted
+}
+
+# Read BIP39 word list into an array
+HERE="$(cd "$(dirname "$0")" || exit; pwd -P)" # ugly but portable
+if [[ -r "${HERE}/xkcdpass.wordlist" ]]; then
+  read -d '' -ra WORDLIST < <(grep -v '^#' "${HERE}/xkcdpass.wordlist")
+else
+  exit 66 # EX_NOINPUT
+fi
+
+while getopts ':L:T:scd' opt; do
+  case "${opt}" in
+    s) squeeze=true ;;
+    c) capitalize=true ;;
+    d) digits=true ;;
+    L) maxlen=${OPTARG} ;;
+    T) maxtries=${OPTARG} ;;
+    *)
+      echo "Usage: $(basename "${0}") [-L n [-T n]] [-s] [-c] [-d] [nwords]" >&2
+      exit 64 # EX_USAGE
+  esac
+done
+
+shift $((OPTIND - 1))
+
+nwords=${1:-5} # by default generate 5 word passphrases
+if [[ -v maxlen ]]; then
+  passphrase=$(xkcdpass:maxlen "${maxlen}" "${nwords}" "${maxtries:-}")
+else
+  passphrase=$(xkcdpass "${nwords}")
+fi
+
+# Workaround some "password complexity" limitations.
+# None of these contribute to entropy. They solely exists to help generating
+# passphrases for sites with these arbitrary requirements.
+
+# "Must include uppercase and lowercase letters": capitalize each word.
+if [[ -v capitalize ]]; then
+  p=()
+  for word in ${passphrase}; do
+    p+=("${word^}")
+  done
+  passphrase=${p[*]}
+fi
+
+# "Cannot be longer than N charecters": sigh...
+# BIP39 words' first four letters unambiguously identify the word.
+# We can shorten the passphrase while preserving entropy.
+if [[ -v squeeze ]]; then
+  p=()
+  for word in ${passphrase}; do
+    p+=("${word:0:4}")
+  done
+  passphrase=${p[*]}
+fi
+
+# "Must include digits": use digits as word separators.
+# We want to make the digits predictable i.e. incrementing and non-ambigious
+# when displayed under various typefaces. Do not use "0" and "1". Start from
+# "2" and count up, rotating back to "2" after "9".
+if [[ -v digits ]]; then
+  ((i = 2))
+  ps=""
+  for word in ${passphrase}; do
+    ps+="${word}${i}"
+    ((i = (i + 1) % 10))
+    if ((i == 0)); then ((i = 2)); fi
+  done
+  passphrase="${ps}"
+fi
+
+echo "${passphrase}"

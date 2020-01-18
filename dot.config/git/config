@@ -18,6 +18,7 @@
 	ci = commit
 	cl = clone
 	co = checkout
+	cobm = checkout-branch-match
 	cp = cherry-pick
 
 	# History in one line per commit. Now in Technicolor!

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+match="$(git rev-parse --abbrev-ref --branches="*$1*")"
+case $(wc -w <<< "${match}" | tr -d ' ') in
+  "0")
+    echo "error: '$1' did not match any branch." >&2
+    exit 1
+    ;;
+  "1")
+    git checkout "${match}"
+    ;;
+  *)
+    printf "err: '%s' is ambiguous among:\n%s\n" "$1" "${match}" >&2
+    exit 1
+    ;;
+esac
