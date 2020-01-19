@@ -19,7 +19,7 @@ else:
     # History
     import os
     import atexit
-    histfile = os.path.expanduser('.python_history')
+    histfile = os.path.expanduser('~/.pyreplhist')
     try:
         readline.read_history_file(histfile)
     except IOError:
