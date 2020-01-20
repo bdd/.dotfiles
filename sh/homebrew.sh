@@ -13,7 +13,7 @@ _move_to_path_head() {
     _path+=("$_p")
   done
 
-  PATH=$( (IFS=:; echo "${_path[*]}") )
+  PATH=$(IFS=:; echo "${_path[*]}")
 }
 
 # Where is Homebrew installed?
