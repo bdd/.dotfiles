@@ -4,6 +4,9 @@
 [[ $OSTYPE =~ ^darwin ]] || return
 
 _RAMDISK_MOUNT_POINT="/Volumes/ramdisk"
+if [[ -n ${ZSH_VERSION-} ]]; then
+  hash -d ramdisk="${_RAMDISK_MOUNT_POINT}"
+fi
 
 rd-attach() {
   local rd_size=512000000 # 512M
@@ -31,16 +34,8 @@ rd-attach() {
   local raw_disk=$(hdiutil attach -nomount ram://${num_sectors} | grep -oE '\S+') || return 1
   diskutil erasevolume HFS+ "ramdisk" "${raw_disk}"
   mount -uwo noatime,noowners ${_RAMDISK_MOUNT_POINT}
-
-  if [[ -n ${ZSH_VERSION-} ]]; then
-    hash -d ramdisk="${_RAMDISK_MOUNT_POINT}"
-  fi
 }
 
 rd-eject() {
   diskutil eject "${_RAMDISK_MOUNT_POINT}"
-
-  if [[ -n ${ZSH_VERSION-} ]]; then
-    unhash -d ramdisk
-  fi
 }
