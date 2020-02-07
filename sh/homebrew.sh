@@ -48,7 +48,7 @@ done
 unset _prefixes _prefix _brew
 unset -f _move_to_path_head
 
-if [[ -n ${HOMEBREW_PREFIX+undefined} ]]; then
+if [[ -n ${HOMEBREW_PREFIX+defined} ]]; then
   # Homebrew behavior options
   export HOMEBREW_NO_ANALYTICS=1
   export HOMEBREW_NO_AUTO_UPDATE=1
