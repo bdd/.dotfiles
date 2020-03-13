@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-[[ ${OSTYPE} =~ ^(darwin|linux) ]] || return
+[[ ${OSTYPE} =~ ^(darwin|linux) ]] || return 0
 
 _move_to_path_head() {
   # Prepend or move arguments to head of $PATH

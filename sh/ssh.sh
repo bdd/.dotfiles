@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # macOS only
-[[ $OSTYPE =~ ^darwin ]] || return
+[[ $OSTYPE =~ ^darwin ]] || return 0
 
 ssh:gpg.rc() {
   # Consider calling this from ~/.(ba|z)shrc.local

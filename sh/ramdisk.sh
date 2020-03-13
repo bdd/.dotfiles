@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 # macOS only
-[[ $OSTYPE =~ ^darwin ]] || return
+[[ $OSTYPE =~ ^darwin ]] || return 0
 
 _RAMDISK_MOUNT_POINT="/Volumes/ramdisk"
 if [[ -n ${ZSH_VERSION-} ]]; then
