@@ -29,6 +29,7 @@
 	pr = pull --rebase
 	rbc = rebase --continue
 	rbi = rebase --interactive
+	root = rev-parse --show-toplevel
 	sh = show
 	st = status
 [diff]
