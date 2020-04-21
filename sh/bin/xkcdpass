@@ -116,10 +116,13 @@ fi
 # when displayed under various typefaces. Do not use "0" and "1". Start from
 # "2" and count up, rotating back to "2" after "9".
 if [[ -v digits ]]; then
-  ((i = 2))
+  ((i = 2, word_num=1))
   ps=""
   for word in ${passphrase}; do
-    ps+="${word}${i}"
+    ps+="${word}"
+    if ((word_num++ < nwords)); then
+      ps+="${i}"
+    fi
     ((i = (i + 1) % 10))
     if ((i == 0)); then ((i = 2)); fi
   done
