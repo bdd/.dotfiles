@@ -91,13 +91,12 @@ if exists('*minpac#init')
         \ '%= %#WarningMsg#%{LinterStatus()}%*', '')
   function! LinterStatus() abort
     let l:status = ''
-    if exists('g:loaded_ale')
-      let l:c = ale#statusline#Count(bufnr(''))
-      let l:e = l:c.error + l:c.style_error
-      let l:w = l:c.warning + l:c.style_warning
-      if l:e + l:w > 0
-        let l:status = printf('<Lint: %d Err, %d Warn>', l:e, l:w)
-      endif
+    if !exists('g:loaded_ale') | return  l:status | endif
+    let l:c = ale#statusline#Count(bufnr(''))
+    let l:e = l:c.error + l:c.style_error
+    let l:w = l:c.warning + l:c.style_warning
+    if l:e + l:w > 0
+      let l:status = printf('<Lint: %d Err, %d Warn>', l:e, l:w)
     endif
     return l:status
   endfunction
