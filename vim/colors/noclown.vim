@@ -33,7 +33,7 @@ endif
 
 let s:palette = {
       \ 'foreground' : [250, '#bcbcbc'],
-      \ 'background' : [234, '#1c1c1c'],
+      \ 'background' : [233, '#121212'],
       \ 'fade'       : [245, '#8a8a8a'],
       \ 'fade-more'  : [238, '#444444'],
       \ 'highlight'  : [230, '#ffffd7'],
