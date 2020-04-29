@@ -2,7 +2,7 @@
 set -eu -o pipefail
 
 backup_and_link() {
-  local source=$1
+  local source=${1##$HOME/}
   local target=$2
   local __dry_run="${DRYRUN+echo dryrun-would-exec:}"
 
@@ -23,12 +23,7 @@ link() {
   local source target
 
   source="${HERE}/$1"
-
-  if (($# == 1)); then
-    target="${HOME}/$1"
-  else
-    target="${HOME}/$2"
-  fi
+  target="${HOME}/$2"
 
   backup_and_link "${source}" "${target}"
 }
@@ -44,7 +39,7 @@ link:dotfiles() {
   done
 }
 
-link:dotconfig() {
+link:dot_config() {
   local source target
 
   [[ -d ${HOME}/.config ]] || mkdir "${HOME}/.config"
@@ -56,37 +51,45 @@ link:dotconfig() {
   done
 }
 
-link:all() {
-  link:dotfiles
-  link:dotconfig
-  link sh .sh
-  link vim .vim
+link:dot_local_bin() {
+  local source target
+
+  [[ -d ${HOME}/.local/bin ]] || mkdir -p "${HOME}/.local/bin"
+
+  for f in $(find ${HERE}/dot.local/bin -mindepth 1 -maxdepth 1 -type f); do
+    source="${f}"
+    target="${HOME}/.local/bin/$(basename "${f}")"
+    backup_and_link "${source}" "${target}"
+  done
 }
 
-in_array() {
-  local arr e=$1
-  shift
-  for arr; do [[ ${arr} == "${e}" ]] && return 0; done
+link:all() {
+  link:dotfiles
+  link:dot_config
+  link:dot_local_bin
+  link dot.config/vim .vim
+}
+
+is_phony_target() {
+  for name in "${PHONY[@]}"; do
+    [[ ${name} == "$1" ]] && return 0
+  done
   return 1
 }
 
 usage() {
-  echo "usage: $0 <file>|<dir>"
-  echo "       $0 <dotfiles|dotconfig|all>"
+  IFS=\|
+  echo "usage: $0 <${PHONY[*]}>" >&2
   exit 64  # EX_USAGE
 }
 
 
 HERE="$(cd "$(dirname "$0")"; pwd -P)"  # ugly but portable
-PHONY=(all dotfiles dotconfig)
+PHONY=(dotfiles dot_config dot_local_bin)
+PHONY+=(all)
 
-(($# != 0 && $# <= 2)) || usage
-
-if in_array "$1" "${PHONY[@]}"; then
-  link:$1
-elif [[ -d "${HERE}/$1" || -f "${HERE}/$1" ]]; then
-  link "$@"
-else
-  echo "${HERE}/$1: Not found" >&2
-  exit 66  # EX_NOINPUT
+if (($# != 1)) || ! is_phony_target "$1"; then
+  usage
 fi
+
+link:$1
