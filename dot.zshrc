@@ -41,14 +41,14 @@ setopt transient_rprompt     # remove RPROMPT when accepting command so doesn't 
 setopt no_beep               # no beeping at all
 
 ### XDG ########################################################################
-[[ -d "${XDG_CONFIG_HOME:=${HOME}/.config}" ]] || mkdir "${XDG_CONFIG_HOME}"
-[[ -d "${XDG_CACHE_HOME:=${HOME}/.cache}" ]] || mkdir "${XDG_CACHE_HOME}"
-[[ -d "${XDG_DATA_HOME:=${HOME}/.local/share}/zsh" ]] || mkdir -p "${XDG_DATA_HOME}/zsh"
+_xdg_config_home=${XDG_CONFIG_HOME:-${HOME}/.config}
+_xdg_cache_home=${XDG_CACHE_HOME:-${HOME}/.cache}; mkdir -p "${_xdg_cache_home}"
+_xdg_data_home_subdir=${XDG_DATA_HOME:-${HOME}/.local/share}/zsh; mkdir -p "${_xdg_data_home_subdir}"
 
 ### PARAMETERS - zshparam(1) ###################################################
 HISTSIZE=2000
 SAVEHIST=2000
-HISTFILE="${XDG_DATA_HOME}/zsh/history"
+HISTFILE="${_xdg_data_home_subdir}/history"
 HISTORY_IGNORE='(cd(| -| ..)|ls|pwd|bg|fg|clear|mount)'
 DIRSTACKSIZE=32              # limit number of dirs kept in stack so it doesn't get unwieldy
 WORDCHARS=${WORDCHARS:s,/,,} # Remove '/' from WORDCHARS so path components are treated like words.
@@ -83,13 +83,13 @@ bindkey '^G' pound-insert
 
 ### MISC #######################################################################
 # Prompt Themes
-fpath=(${XDG_CONFIG_HOME}/shrc/zprompt $fpath)
+fpath=(${_xdg_config_home}/shrc/zprompt $fpath)
 autoload -Uz promptinit; promptinit
 prompt ${prompt_themes[(r)bdd]-off}  # if exists load 'bdd' theme or else turn themes off.
 
 # Completion
 autoload -Uz compinit;
-alias compinit="compinit -d ${XDG_CACHE_HOME}/zcompdump"
+alias compinit="compinit -d ${_xdg_cache_home}/zcompdump"
 compinit
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*:descriptions' format '%B%d%b'
@@ -99,5 +99,5 @@ zstyle ':completion:*' group-name ''
 
 ### RC EXTENSIONS ##############################################################
 # Load: ~/.config/shrc/*.zsh, ~/.config/shrc/*.sh, and ~/.zshrc.local
-function { local f; for f ($@) source $f } ${XDG_CONFIG_HOME}/shrc/*.{z,}sh(N) ~/.zshrc.local(N)
+function { local f; for f ($@) source $f } ${_xdg_config_home}/shrc/*.{z,}sh(N) ~/.zshrc.local(N)
 ################################################################################

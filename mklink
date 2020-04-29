@@ -2,7 +2,7 @@
 set -eu -o pipefail
 
 backup_and_link() {
-  local source=${1##$HOME/}
+  local source=${1}
   local target=$2
   local __dry_run="${DRYRUN+echo dryrun-would-exec:}"
 
