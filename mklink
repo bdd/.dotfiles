@@ -42,7 +42,7 @@ link:dotfiles() {
 link:dot_config() {
   local source target
 
-  [[ -d ${HOME}/.config ]] || mkdir "${HOME}/.config"
+   mkdir -p "${HOME}/.config"
 
   for dir in $(find ${HERE}/dot.config -mindepth 1 -maxdepth 1 -type d); do
     source="${dir}"
@@ -54,11 +54,23 @@ link:dot_config() {
 link:dot_local_bin() {
   local source target
 
-  [[ -d ${HOME}/.local/bin ]] || mkdir -p "${HOME}/.local/bin"
+  mkdir -p "${HOME}/.local/bin"
 
   for f in $(find ${HERE}/dot.local/bin -mindepth 1 -maxdepth 1 -type f); do
     source="${f}"
     target="${HOME}/.local/bin/$(basename "${f}")"
+    backup_and_link "${source}" "${target}"
+  done
+}
+
+link:dot_local_share() {
+  local source target
+
+  mkdir -p "${HOME}/.local/share"
+
+  for dir in $(find ${HERE}/dot.local/share -mindepth 1 -maxdepth 1 -type d); do
+    source="${dir}"
+    target="${HOME}/.local/share/$(basename "${dir}")"
     backup_and_link "${source}" "${target}"
   done
 }
@@ -85,7 +97,7 @@ usage() {
 
 
 HERE="$(cd "$(dirname "$0")"; pwd -P)"  # ugly but portable
-PHONY=(dotfiles dot_config dot_local_bin)
+PHONY=(dotfiles dot_config dot_local_bin dot_local_share)
 PHONY+=(all)
 
 if (($# != 1)) || ! is_phony_target "$1"; then

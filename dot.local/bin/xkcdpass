@@ -58,9 +58,9 @@ xkcdpass:maxlen() {
 }
 
 # Read BIP39 word list into an array
-HERE="$(cd "$(dirname "$0")" || exit; pwd -P)" # ugly but portable
-if [[ -r "${HERE}/xkcdpass.wordlist" ]]; then
-  read -d '' -ra WORDLIST < <(grep -v '^#' "${HERE}/xkcdpass.wordlist")
+bip39_en_words="${XDG_DATA_HOME:-$HOME/.local/share}/dict/bip39.en.words"
+if [[ -r "${bip39_en_words}" ]]; then
+  read -d '' -ra WORDLIST < <(grep -v '^#' "${bip39_en_words}")
 else
   exit 66 # EX_NOINPUT
 fi
