@@ -25,7 +25,13 @@ alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 ## Key Bindings
 bind '"\C-G":insert-comment'
 
+## XDG
+[[ -d "${XDG_CONFIG_HOME:=${HOME}/.config}" ]] || mkdir "${XDG_CONFIG_HOME}"
+[[ -d "${XDG_CACHE_HOME:=${HOME}/.cache}" ]] || mkdir "${XDG_CACHE_HOME}"
+[[ -d "${XDG_DATA_HOME:=${HOME}/.local/share}/bash" ]] || mkdir -p "${XDG_DATA_HOME}/bash"
+
 ## Bash Variables
+HISTFILE="${XDG_DATA_HOME}/bash/history"
 HISTCONTROL='ignorespace:ignoredups'
 HISTIGNORE='cd:cd -:cd ..:pwd:bg:fg:clear:mount'
 HISTFILESIZE=2000
@@ -34,8 +40,8 @@ HISTFILESIZE=2000
 PS1='\w\$ '
 
 ## Extensions
-# Load: ~/.sh/*.bash, ~/.sh/*.sh, and ~/.bashrc.local
-for _ext in ~/.sh/*.{ba,}sh ~/.bashrc.loca[l]; do
+# Load: ~/.config/shrc/*.bash, ~/.config/shrc/*.sh, and ~/.bashrc.local
+for _ext in "${XDG_CONFIG_HOME}"/shrc/*.{ba,}sh ~/.bashrc.loca[l]; do
   # shellcheck source=/dev/null # don't follow to check sourced files.
   source "${_ext}"
 done

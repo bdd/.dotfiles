@@ -129,15 +129,18 @@ command! NoBCE set t_ut= <Bar> redraw!
 " Detect file types. Load '&rtp/{ftplugin, indent}/<ft>.vim'.
 filetype plugin indent on
 
-" 'undofile' is off by default but when enabled keep them together under
-" a well-known location instead of same directory with edited files.
-set undodir=~/.vim/.undo/
-
-" Keep viminfo file under ~/.vim instead of home.
-set viminfo+=n~/.vim/.viminfo
+" ~/.vim/.local: {{{
+" All artifacts created by Vim in runtime go to once central location
+let g:netrw_home = "~/vim/.local"
+set viminfo+=n~/.vim/.local/viminfo
+set directory=~/.vim/.local/swp
+set backupdir=~/.vim/.local/bak
+""" 'undofile' is off by default but can be enabled via modeline, autocmd, etc.
+set undodir=~/.vim/.local/undo
+" }}}
 
 " Local additions and overrides
-let $LOCALVIMRC = expand('~/.vimrc.local')
+let $LOCALVIMRC = expand('~/.vim/.local/vimrc')
 if filereadable($LOCALVIMRC) | source $LOCALVIMRC | endif
 
 " vim: undofile foldmethod=marker foldlevel=1
