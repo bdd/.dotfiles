@@ -1,4 +1,9 @@
 # vim: filetype=zsh
+
+# To profile zsh startup, run:
+# % ZPROF=1 zsh -ic "zprof;exit"
+((ZPROF > 0)) && zmodload zsh/zprof
+
 #
 ### zshoptions(1) ##############################################################
 # Changing Directories
