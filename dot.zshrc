@@ -92,17 +92,15 @@ fpath=(${_xdg_config_home}/shrc/zprompt $fpath)
 autoload -Uz promptinit; promptinit
 prompt ${prompt_themes[(r)bdd]-off}  # if exists load 'bdd' theme or else turn themes off.
 
-# Completion
-autoload -Uz compinit;
-alias compinit="compinit -d ${_xdg_cache_home}/zcompdump"
-compinit
-zstyle ':completion:*' verbose yes
-zstyle ':completion:*:descriptions' format '%B%d%b'
-zstyle ':completion:*:messages' format '%d'
-zstyle ':completion:*:warnings' format 'No matches for: %d'
-zstyle ':completion:*' group-name ''
-
 ### RC EXTENSIONS ##############################################################
 # Load: ~/.config/shrc/*.zsh, ~/.config/shrc/*.sh, and ~/.zshrc.local
 function { local f; for f ($@) source $f } ${_xdg_config_home}/shrc/*.{z,}sh(N) ~/.zshrc.local(N)
-################################################################################
+
+### Completion
+# This section *MUST* be at the end of ~/.zshrc and no other sourced rc file
+# should call `compinit` on their own.  `compinit` uses a dump file to speed up
+# loading of completion files. If it detects a change in the number of the
+# completion files, it will regenerate the dump file. Dump file generation slows
+# down initialization time.
+autoload -Uz compinit
+compinit -d ${_xdg_cache_home}/zcompdump

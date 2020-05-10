@@ -63,7 +63,6 @@ if [[ -n ${HOMEBREW_PREFIX+defined} ]]; then
   # Load completion files
   if [[ -n "${ZSH_VERSION-}" ]]; then
     FPATH="${HOMEBREW_PREFIX}/share/zsh/site-functions:${FPATH}"
-    compinit
   elif [[ -n "${BASH_VERSION-}" ]]; then
     for _f in "${HOMEBREW_PREFIX}"/etc/bash_completion.d/*; do
       # shellcheck source=/dev/null # don't follow to check sourced files.
