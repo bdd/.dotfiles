@@ -4,8 +4,7 @@
 # % ZPROF=1 zsh -ic "zprof;exit"
 ((ZPROF > 0)) && zmodload zsh/zprof
 
-#
-### zshoptions(1) ##############################################################
+### zshoptions(1)
 # Changing Directories
 setopt auto_cd               # if not a command but a dir name, cd into it
 setopt auto_pushd            # cd pushes old dir onto dir stack
@@ -45,12 +44,12 @@ setopt transient_rprompt     # remove RPROMPT when accepting command so doesn't 
 # ZLE
 setopt no_beep               # no beeping at all
 
-### XDG ########################################################################
+### XDG
 _xdg_config_home=${XDG_CONFIG_HOME:-${HOME}/.config}
 _xdg_cache_home=${XDG_CACHE_HOME:-${HOME}/.cache}; mkdir -p "${_xdg_cache_home}"
 _xdg_data_home_subdir=${XDG_DATA_HOME:-${HOME}/.local/share}/zsh; mkdir -p "${_xdg_data_home_subdir}"
 
-### PARAMETERS - zshparam(1) ###################################################
+### zshparam(1)
 HISTSIZE=2000
 SAVEHIST=2000
 HISTFILE="${_xdg_data_home_subdir}/history"
@@ -58,8 +57,8 @@ HISTORY_IGNORE='(cd(| -| ..)|ls|pwd|bg|fg|clear|mount)'
 DIRSTACKSIZE=32              # limit number of dirs kept in stack so it doesn't get unwieldy
 WORDCHARS=${WORDCHARS:s,/,,} # Remove '/' from WORDCHARS so path components are treated like words.
 
-### ALIASES ####################################################################
-# Global Aliases
+### Aliases
+# Global
 alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
@@ -69,7 +68,7 @@ alias -g S='| sort'
 alias -g WC='| wc -l'
 alias -g CP='| termclip'
 
-# Command Aliases
+# Command
 alias h=history
 alias dv='dirs -v' # need a shorter command to see the dirstack
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
@@ -82,17 +81,17 @@ if [[ $OSTYPE =~ ^darwin ]]; then
   hash -d icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs
 fi
 
-### KEY BINDINGS ###############################################################
+### Key Bindings
 bindkey -e # Emacs key bindings
 bindkey '^G' pound-insert
 
-### MISC #######################################################################
+### Misc
 # Prompt Themes
 fpath=(${_xdg_config_home}/shrc/zprompt $fpath)
 autoload -Uz promptinit; promptinit
 prompt ${prompt_themes[(r)bdd]-off}  # if exists load 'bdd' theme or else turn themes off.
 
-### RC EXTENSIONS ##############################################################
+### RC Extensions
 # Load: ~/.config/shrc/*.zsh, ~/.config/shrc/*.sh, and ~/.zshrc.local
 function { local f; for f ($@) source $f } ${_xdg_config_home}/shrc/*.{z,}sh(N) ~/.zshrc.local(N)
 
