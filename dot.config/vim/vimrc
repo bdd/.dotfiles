@@ -71,9 +71,10 @@ if exists('*minpac#init')
   call minpac#init()
 
   call minpac#add('fatih/vim-go')
-  call minpac#add('godlygeek/tabular')
+  call minpac#add('godlygeek/tabular', {'type': 'opt'})
   call minpac#add('junegunn/fzf', {'do': {-> system('./install --bin')}})
   call minpac#add('junegunn/fzf.vim')
+  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
   call minpac#add('k-takata/minpac', {'type': 'opt'})
 
   call minpac#add('mileszs/ack.vim')
