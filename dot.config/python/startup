@@ -6,32 +6,45 @@
 from __future__ import print_function
 
 
-# readline
+def __setup_rlcomp():
+    import readline
+    import rlcompleter
+    readline.parse_and_bind('tab: complete')
+
+def __setup_rlhist():
+    import atexit
+    import os
+    import readline
+
+    xdg_data_home = os.getenv('XDG_DATA_HOME',
+            os.path.join(os.getenv('HOME'), '.local', 'share'))
+    py_data_home = os.path.join(xdg_data_home, 'python')
+    histfile = os.path.join(py_data_home, 'history')
+
+    try:
+        readline.read_history_file(histfile)
+    except IOError:
+        pass
+
+    readline.set_history_length(1000)
+
+    def write_history_file():
+        if not os.path.isdir(py_data_home):
+            os.mkdir(py_data_home)
+
+        readline.write_history_file(histfile)
+
+    atexit.register(write_history_file)
+
+
 try:
     import readline
 except ImportError:
     print("Cannot import `readline'")
 else:
-    # Completion
-    import rlcompleter
-    readline.parse_and_bind('tab: complete')
-
-    # History
-    import os
-    import atexit
-    histfile = os.path.expanduser('~/.pyreplhist')
-    try:
-        readline.read_history_file(histfile)
-    except IOError:
-        pass
-    readline.set_history_length(1000)
-    atexit.register(readline.write_history_file, histfile)
-
+    __setup_rlcomp()
+    __setup_rlhist()
     del readline
-    del rlcompleter
-    del os
-    del atexit
-    del histfile
 
 
 # datetime

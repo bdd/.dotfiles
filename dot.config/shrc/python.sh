@@ -1,7 +1,10 @@
 # shellcheck shell=bash
-export PYTHONSTARTUP=~/.config/python/startup
-if [[ ! -r "${PYTHONSTARTUP}" ]]; then
-  unset PYTHONSTARTUP
-fi
+export PYTHONSTARTUP=${XDG_CONFIG_HOME:-${HOME}/.config}/python/startup
+[[ -r ${PYTHONSTARTUP} ]] || unset PYTHONSTARTUP
 
+_prefer_py3() {
+  if hash python3; then python3; else python; fi
+}
+
+alias python=_prefer_py3
 alias py=python
