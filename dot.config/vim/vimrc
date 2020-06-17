@@ -131,13 +131,14 @@ command! NoBCE set t_ut= <Bar> redraw!
 filetype plugin indent on
 
 " ~/.vim/.local: {{{
-" All artifacts created by Vim in runtime go to once central location
-let g:netrw_home = "~/vim/.local"
-set viminfo+=n~/.vim/.local/viminfo
-set directory=~/.vim/.local/swp
-set backupdir=~/.vim/.local/bak
-""" 'undofile' is off by default but can be enabled via modeline, autocmd, etc.
-set undodir=~/.vim/.local/undo
+" All artifacts created by Vim at runtime go under one central location.
+let vimlocal = fnamemodify($MYVIMRC, ':p:h') . '/.local'
+
+let &viminfo = &viminfo . ',' . 'n'. vimlocal . '/viminfo'
+let &directory = vimlocal . '/swp'
+let &backupdir = vimlocal . '/bak'
+let &undodir = vimlocal . '/undo'
+let g:netrw_home = vimlocal
 " }}}
 
 " Local additions and overrides
