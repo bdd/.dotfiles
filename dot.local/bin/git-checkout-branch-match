@@ -1,15 +1,33 @@
 #!/usr/bin/env bash
-match="$(git rev-parse --abbrev-ref --branches="*$1*")"
-case $(wc -w <<< "${match}" | tr -d ' ') in
-  "0")
-    echo "error: '$1' did not match any branch." >&2
-    exit 1
-    ;;
-  "1")
-    git checkout "${match}"
-    ;;
-  *)
-    printf "err: '%s' is ambiguous among:\n%s\n" "$1" "${match}" >&2
-    exit 1
-    ;;
-esac
+
+# Checks out the git branch matching the passed pattern.
+#
+# Treats $1 as '*arg*' pattern for matching branch names.
+# Checks the branch out if there's only one match.
+# Fails if there's no or more than one match.
+#
+# Example:
+# % git branch
+#   master
+# * t78991-foo-feature
+#   refactor-bar
+#
+# % git cobm refac
+#
+# % git branch
+#   master
+#   t78991-foo-feature
+# * refactor-bar
+
+matches=( $(git rev-parse --abbrev-ref --branches="*$1*") )
+
+if (( ${#matches[@]} == 1 )); then
+  exec git checkout "${matches[0]}"
+elif (( ${#matches[@]} == 0 )); then
+  echo "*$1* doesn't match any branch." >&2
+else
+  mlist=$(sed 's/ /, /g' <<< "${matches[*]}")
+  echo "*$1* is ambiguous among: ${mlist}." >&2
+fi
+
+exit 1
