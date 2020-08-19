@@ -79,6 +79,7 @@ link:all() {
   link:dotfiles
   link:dot_config
   link:dot_local_bin
+  link:dot_local_share
   link dot.config/vim .vim
 }
 
