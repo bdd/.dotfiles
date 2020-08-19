@@ -41,3 +41,6 @@
 	autocorrect = 1
 [commit]
 	verbose = true
+
+[include]
+	path = ~/.gitconfig.local
