@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+listen_port () {
+  for listener in "tor 9050" "tor.real 9150"; do
+    read -r cmd port <<< "${listener}"
+    lsof -lnP -a \
+      -c "/^${cmd}$/" \
+      -i "tcp:${port}" \
+      -s tcp:listen \
+      -u "${UID}" > /dev/null 2>&1 \
+      && echo "${port}"
+  done
+}
+
+port=$(listen_port)
+[[ -n "${port}" ]] || exit 69 # EX_UNAVAILABLE
+echo "socks5h://127.0.0.1:${port}" # Tor(Browser) still listens on IPv4 only
