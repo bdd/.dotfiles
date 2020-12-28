@@ -73,10 +73,11 @@ alias h=history
 alias dv='dirs -v' # need a shorter command to see the dirstack
 alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
-# OS specific aliases and directory hashes
+# Directory
+hash -d D=~/Desktop
+hash -d d=~/Downloads
+# OS specific directories
 if [[ $OSTYPE =~ ^darwin ]]; then
-  hash -d D=~/Desktop
-  hash -d d=~/Downloads
   hash -d a=~/Applications
   hash -d icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs
 fi
