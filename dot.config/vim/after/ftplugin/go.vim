@@ -1,1 +1,1 @@
-setlocal noexpandtab shiftwidth=0
+setlocal nolist noexpandtab shiftwidth=0
