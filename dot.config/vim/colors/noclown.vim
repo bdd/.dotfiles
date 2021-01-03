@@ -125,7 +125,7 @@ call s:Link('StatusLineNC', 'VertSplit')
 call s:Defn('StatusLineTerm', s:fg('attention'), s:attr('reverse'))
 call s:Defn('StatusLineTermNC', s:fg('attention'), s:bg('fade-more'))
 call s:Defn('Visual', s:attr('reverse'))
-call s:Defn('MatchParen', s:attr('reverse'))
+call s:Defn('MatchParen', s:fg('fade'), s:attr('reverse'))
 
 call s:Defn('Title', s:fg('highlight'))  " titles for output from ':set all', ':autocmd' etc.
 call s:Link('Question', 'Title')
