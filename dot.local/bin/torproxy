@@ -1,18 +1,41 @@
 #!/usr/bin/env bash
-set -uo pipefail
+set -euo pipefail
 
-listen_port () {
+listening_port () {
+  local cmd port
+
   for listener in "tor 9050" "tor.real 9150"; do
     read -r cmd port <<< "${listener}"
-    lsof -lnP -a \
+    if lsof -lnP -a \
       -c "/^${cmd}$/" \
       -i "tcp:${port}" \
       -s tcp:listen \
-      -u "${UID}" > /dev/null 2>&1 \
-      && echo "${port}"
+      -u "${UID}" > /dev/null 2>&1; then
+      echo "${port}"
+      return
+    fi
   done
 }
 
-port=$(listen_port)
-[[ -n "${port}" ]] || exit 69 # EX_UNAVAILABLE
-echo "socks5h://127.0.0.1:${port}" # Tor(Browser) still listens on IPv4 only
+case ${1-url} in
+  "url")
+    template="socks5://{host}:{port}" ;;
+  "hostport")
+    template="{host}:{port}" ;;
+  "curl")
+    # 'socks5h' is a curl specific url scheme to resolve hostname on the proxy side.
+    # ...most other apps do this by default with a socks5 proxy.
+    template="-x socks5h://{host}:{port}" ;;
+  *)
+    echo "unknown output format '$1'" >&2
+    exit 1
+esac
+
+port=$(listening_port)
+if [[ -z "${port}" ]]; then
+  exit 69 # EX_UNAVAILABLE
+fi
+
+host="127.0.0.1" # Tor(Browser) still listens on IPv4 only
+
+echo "${template}" | sed -e "s/{host}/${host}/g" -e "s/{port}/${port}/g"
