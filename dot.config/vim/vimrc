@@ -67,7 +67,7 @@ if exists(':Man')
 endif
 
 silent! packadd minpac
-if exists('*minpac#init')
+if exists('g:loaded_minpac')
   command! -bar PackUpdate call minpac#update()
   command! -bar PackClean call minpac#clean()
   call minpac#init()
