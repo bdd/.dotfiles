@@ -144,7 +144,7 @@ let g:netrw_home = vimlocal
 " }}}
 
 " Local additions and overrides
-let $LOCALVIMRC = expand('~/.vim/.local/vimrc')
+let $LOCALVIMRC = vimlocal . '/vimrc'
 if filereadable($LOCALVIMRC) | source $LOCALVIMRC | endif
 
 " vim: undofile foldmethod=marker foldlevel=1
