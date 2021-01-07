@@ -1,9 +1,16 @@
-set guifont=Go\ Mono:h13,Menlo:h13,Monaco:h13
+" Remove all GUI components, except the native tab bar.
+set guioptions=e
 
 if has('gui_macvim')
-  " Remove all GUI options
-  set guioptions=
+  set guifont=JetBrains\ Mono\ Regular:h12,Go\ Mono:h12
+  set guifont+=Menlo:h12
 
   " Use Option key as Meta key
   set macmeta
+elseif has("gui_gtk3")
+  set guifont=JetBrains\ Mono\ Regular\ 12,Go\ Mono\ 12
+  set guifont+=DejaVu\ Sans\ Mono\ 12
+  set guifont+=Monospace\ 12
+elseif has("gui_win32")
+  set guifont=JetBrains\ Mono\ Regular:h12,Go\ Mono:h12
 endif
