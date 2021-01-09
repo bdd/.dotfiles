@@ -26,9 +26,9 @@ extract() {
   fi
 
   case "$1" in
-    *.tgz|*.txz|*.tbz2)
+    *.tgz|*.txz|*.tbz2|*.tzst)
       ;&
-    *.tar.gz|*.tar.xz|*.tar.bz2)
+    *.tar.gz|*.tar.xz|*.tar.bz2|*.tar.zst)
       tar ${verbose} ${test:--x} -f "$1" ;;
     *.gz)
       gunzip ${verbose} ${test} "$1" ;;
@@ -46,6 +46,8 @@ extract() {
       7z x "$1" ;;
     *.safariextz)
       xar ${verbose} ${test:--x} -f "$1" ;;
+    *.zst)
+      zstd -d ${verbose} ${test:+-l} "$1" ;;
     *)
       echo "Don't know how to extract '$1'" >&2;
       return 1
