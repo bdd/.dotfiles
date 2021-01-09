@@ -64,6 +64,7 @@ function! s:attr(...)
   let l:attrs = empty(l:alist) ? 'NONE' : join(l:alist, ',')
 
   return {'term': l:attrs, 'cterm': l:attrs, 'gui': l:attrs}
+  "return {'cterm': l:attrs }
 endfunction
 
 " Clear every attribute to NONE to avoid inheriting from default colorscheme.
@@ -114,8 +115,8 @@ call s:Defn('Normal', s:fg('foreground'), s:bg('background'))
 
 call s:Defn('SpecialKey', s:fg('fade'))
 call s:Defn('NonText', s:fg('fade-more'))
-call s:Link('CursorLineNr', 'SpecialKey')
 call s:Link('LineNr', 'NonText')
+call s:Link('CursorLineNr', 'SpecialKey')
 call s:None('CursorLine')
 
 call s:Defn('VertSplit', s:fg('fade'), s:bg('fade-more'))
@@ -125,7 +126,7 @@ call s:Link('StatusLineNC', 'VertSplit')
 call s:Defn('StatusLineTerm', s:fg('attention'), s:attr('reverse'))
 call s:Defn('StatusLineTermNC', s:fg('attention'), s:bg('fade-more'))
 call s:Defn('Visual', s:attr('reverse'))
-call s:Defn('MatchParen', s:fg('fade'), s:attr('reverse'))
+call s:Defn('MatchParen', s:fg('attention'), s:bg('fade-more'))
 
 call s:Defn('Title', s:fg('highlight'))  " titles for output from ':set all', ':autocmd' etc.
 call s:Link('Question', 'Title')
