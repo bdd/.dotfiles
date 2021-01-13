@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-read -r -d '' FMT <<-EOS
+read -r -d '' FMT <<EOS
 resolve     %{time_namelookup}
 tcp rts     %{time_connect}
 tls rts     %{time_appconnect} (fail=%{ssl_verify_result})
@@ -10,4 +10,5 @@ first byte  %{time_starttransfer} (HTTP %{response_code})
          Σ  %{time_total} (%{num_connects} connect(s), rx: %{size_download} bytes / tx: %{size_upload} bytes)\n
 EOS
 
-curl -Lsw "${FMT}" -o /dev/null $@
+curl --location --silent --show-error --fail \
+     --write-out "%{stderr}${FMT}" "$@"
