@@ -74,6 +74,15 @@ if exists('g:loaded_minpac')
   call minpac#add('k-takata/minpac', {'type': 'opt'})
 
   call minpac#add('fatih/vim-go')
+  let g:go_fmt_command = "gopls"
+  let g:go_imports_mode = "gopls"
+  let g:go_fillstruct_mode = "gopls"
+  let g:go_gopls_matcher = "fuzzy"
+  let g:go_gopls_complete_unimported = v:true
+  let g:go_gopls_deep_completion = v:true
+  let g:go_gopls_gofumpt = v:true
+  let g:go_gopls_staticcheck = v:true
+
   call minpac#add('godlygeek/tabular')
   call minpac#add('junegunn/fzf', {'do': {-> system('./install --bin')}})
   call minpac#add('junegunn/fzf.vim')
