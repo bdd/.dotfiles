@@ -71,25 +71,25 @@ if exists('g:loaded_minpac')
   command! -bar PackUpdate call minpac#update()
   command! -bar PackClean call minpac#clean()
   call minpac#init()
+  call minpac#add('k-takata/minpac', {'type': 'opt'})
 
   call minpac#add('fatih/vim-go')
-  call minpac#add('godlygeek/tabular', {'type': 'opt'})
+  call minpac#add('godlygeek/tabular')
   call minpac#add('junegunn/fzf', {'do': {-> system('./install --bin')}})
   call minpac#add('junegunn/fzf.vim')
-  call minpac#add('junegunn/goyo.vim', {'type': 'opt'})
-  call minpac#add('k-takata/minpac', {'type': 'opt'})
+  call minpac#add('junegunn/goyo.vim')
 
   call minpac#add('mileszs/ack.vim')
   if executable('rg') | let g:ackprg = 'rg --vimgrep --smart-case' | endif
 
   call minpac#add('tpope/vim-commentary')
   call minpac#add('tpope/vim-eunuch')
-  call minpac#add('tpope/vim-fugitive', {'type': 'opt'})
+  call minpac#add('tpope/vim-fugitive')
   call minpac#add('tpope/vim-rsi')
   call minpac#add('tpope/vim-surround')
   call minpac#add('tpope/vim-unimpaired')
 
-  call minpac#add('w0rp/ale')
+  call minpac#add('dense-analysis/ale')
   let &statusline = substitute(&statusline,'%=',
         \ '%= %#WarningMsg#%{LinterStatus()}%*', '')
   function! LinterStatus() abort
