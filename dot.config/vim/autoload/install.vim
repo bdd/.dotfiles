@@ -3,7 +3,7 @@ if exists('g:loaded_install')
 endif
 let g:loaded_install = 1
 
-function! install#() abort
+function! install#(...) abort
   let l:repo = 'https://github.com/k-takata/minpac.git'
   let l:local = split(&packpath, ',')[0] . '/pack/minpac/opt/minpac'
   let l:cmdline = printf("git clone --depth 1 \"%s\" \"%s\" 2>&1", l:repo, l:local)
@@ -14,9 +14,10 @@ function! install#() abort
     return v:false
   endif
 
+  let s:finish_hook = a:0 > 0 ? a:1 : 'packloadall!'
   augroup install#post_install
     autocmd!
-    autocmd VimEnter * call minpac#update('', {'do': 'packloadall!'})
+    autocmd VimEnter * call minpac#update('', {'do': s:finish_hook})
   augroup END
 
   return v:true
