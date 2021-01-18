@@ -72,13 +72,23 @@ git clone https://github.com/bdd/.dotfiles ~/.dotfiles
 ~/.dotfiles/mklink all
 vim --cmd 'call install#("qall")'
 
-# maps caps to ctrl
-gsettings set org.gnome.desktop.input-sources xkb-options "['caps:ctrl_modifier']"
-
-# solid black background
-gsettings set org.gnome.desktop.background primary-color '#000000'
-gsettings set org.gnome.desktop.background secondary-color '#000000'
-gsettings set org.gnome.desktop.background picture-uri ''
-
 # switch to zsh
 sudo usermod -s /usr/bin/zsh "$(whoami)" && exec zsh -li
+
+##
+# To test this script in a container:
+#
+# % podman build -t fedora-customize-test -f - . <<"EOF"
+# FROM fedora:latest
+# ARG user
+# ARG pwhash
+# ENV user=${user:-bdd}
+# ENV pwhash=${pwhash:-'$y$j9T$xZtIaYYvCl6jLU66CxGfH/$L2TzPZzaqP2q9s2qBbukXmDxVDcY//wZfbjdqGaqtID'}
+# RUN useradd -mUG wheel $user -p "$pwhash"
+# ADD fedora.sh /fedora.sh
+# USER $user
+# ENTRYPOINT ["/bin/bash"]
+# EOF
+#
+# % podman run --rm -it fedora-customize-test /fedora.sh
+# -- Default user password is "fedora".
