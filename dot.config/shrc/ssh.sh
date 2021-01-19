@@ -14,7 +14,7 @@ ssh:gpg.rc() {
 
 case "${OSTYPE}" in
   darwin*)
-    typeset -gr PKCS11_PROVIDER=/usr/lib/ssh-keychain.dylib
+    typeset -gr SC_PKCS11_PROVIDER=/usr/lib/ssh-keychain.dylib
     ;;
 
   linux*)
@@ -23,10 +23,16 @@ case "${OSTYPE}" in
       /usr/lib/x86_64-linux-gnu  # debian
     )
 
-    for _dir in ${_dirs[@]}; do
+    for _dir in "${_dirs[@]}"; do
       _so="${_dir}/opensc-pkcs11.so"
       if [[ -r "${_so}" ]]; then
-        typeset -gr PKCS11_PROVIDER="${_so}"
+        typeset -gr SC_PKCS11_PROVIDER="${_so}"
+        unset _so
+      fi
+
+      _so="${_dir}/libtpm2_pkcs11.so"
+      if [[ -r "${_so}" ]]; then
+        typeset -gr TPM_PKCS11_PROVIDER="${_so}"
         unset _so
       fi
     done
@@ -38,10 +44,22 @@ case "${OSTYPE}" in
     return 0
 esac
 
-ssh:sc-add() {
-  ssh-add -s "${PKCS11_PROVIDER}"
-}
+if [[ -n ${SC_PKCS11_PROVIDER-} ]]; then
+  ssh:sc-add() {
+    ssh-add -s "${SC_PKCS11_PROVIDER}"
+  }
 
-ssh:sc-kill() {
-  ssh-add -e "${PKCS11_PROVIDER}"
-}
+  ssh:sc-kill() {
+    ssh-add -e "${SC_PKCS11_PROVIDER}"
+  }
+fi
+
+if [[ -n ${TPM_PKCS11_PROVIDER-} ]]; then
+  ssh:tpm-add() {
+    ssh-add -s "${TPM_PKCS11_PROVIDER}"
+  }
+
+  ssh:tpm-kill() {
+    ssh-add -e "${TPM_PKCS11_PROVIDER}"
+  }
+fi
