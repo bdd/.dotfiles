@@ -24,10 +24,6 @@ set wildmode=list:longest
 
 set list listchars=tab:»‧,trail:░,precedes:◄,extends:►,nbsp:‧
 augroup listchars
-  " XXX: 'listchars' is global only. ':setlocal' will set the global value.
-  "      Making 'listchars' global-local is still an open issue.
-  "      https://github.com/vim/vim/issues/5206
-  "
   autocmd!
   " Hide trailing space markers in insert mode with a blank override.
   autocmd InsertEnter * if &list | setlocal listchars+=trail:\  | endif
