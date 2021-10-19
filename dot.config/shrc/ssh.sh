@@ -4,13 +4,24 @@ ssh:gpg.rc() {
   # Consider calling this from ~/.(ba|z)shrc.local
   if hash gpg-connect-agent 2>/dev/null; then
     gpg-connect-agent /bye
-    if [[ ${OSTYPE} =~ ^darwin ]]; then
-      typeset -gr LAUNCHD_SSH_AUTH_SOCK=${SSH_AUTH_SOCK}
-    fi
-    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    ssh:restore-gpg-agent
   fi
 }
 
+ssh:_set-ssh_auth_sock() {
+  [[ -n $1 && -S $1 ]] || return 1
+  export SSH_AUTH_SOCK="$1"
+}
+
+ssh:restore-gpg-agent() {
+  ssh:_set-ssh_auth_sock \
+    "$(gpgconf --list-dirs agent-ssh-socket)"
+}
+
+ssh:restore-ssh-agent() {
+  ssh:_set-ssh_auth_sock \
+    "$(lsof -a -U -u "${USER}" -c ssh-agent -Fn | sed -n 's/^n//p')"
+}
 
 case "${OSTYPE}" in
   darwin*)
