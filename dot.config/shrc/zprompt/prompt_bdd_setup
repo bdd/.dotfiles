@@ -1,12 +1,18 @@
 # vim: filetype=zsh
 
 prompt_bdd_setup() {
+  local \
+    co_fade=245 \
+    co_error=203 \
+    co_attention=224 \
+    co_highlight=230
+
   colorize_by_os() {
     local color
     case "${OSTYPE}" in
       darwin*) color="red"    ;;
-      linux*)  color="green"  ;;
-      *)       color="yellow" ;;
+      linux*)  color="yellow" ;;
+      *)       color="cyan"   ;;
     esac
 
     echo "%F{${color}}$*%f"
@@ -14,21 +20,16 @@ prompt_bdd_setup() {
 
   PS1="%~$(colorize_by_os '%#')"  # cwd relative to home and '%' (or '#' if root)
   # Notice ternary expression: %(<n>check.true-text.false-text).
-  PS1+="%F{blue}%(1j.&.)%f"  # '&' if there are background jobs.
+  PS1+="%F{${co_attention}}%(1j.&.)%f"  # '&' if there are background jobs.
   PS1+=" "  # separate prompt from command input
 
-  RPROMPT="%F{red}%(?..%?)%f"  # exit status of last process is not 0
+  RPROMPT="%F{${co_error}}%(?..%?)%f"  # exit status of last process is not 0
+  if [[ -z ${TMUX} ]]; then
+    RPROMPT+=" %F{${co_fade}}%m%f"
+  fi
 
   if (($# > 0)); then
-    case $1 in
-      norprompt) unset RPROMPT; shift ;;
-      rprompt-time) RPROMPT+=" %*"; shift ;;
-      rprompt-hom) RPROMPT+=" %M ${OSTYPE} ${MACHTYPE}"; shift ;;
-    esac
-
-    if (($# > 0)); then
-      PS1="$1:${PS1}"
-    fi
+    PS1="$1:${PS1}"
   fi
 }
 
