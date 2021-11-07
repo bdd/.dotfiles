@@ -18,8 +18,10 @@ prompt_bdd_setup() {
     echo "%F{${color}}$*%f"
   }
 
-  PS1="%~$(colorize_by_os '%#')"  # cwd relative to home and '%' (or '#' if root)
+  PS1="%~"
+  PS1+="$(colorize_by_os '%#')"  # cwd relative to home and '%' (or '#' if root)
   # Notice ternary expression: %(<n>check.true-text.false-text).
+  PS1+="%F{${co_highlight}}%(2L.%%.)%f"  # '%' if shell level is >= 2.
   PS1+="%F{${co_attention}}%(1j.&.)%f"  # '&' if there are background jobs.
   PS1+=" "  # separate prompt from command input
 
