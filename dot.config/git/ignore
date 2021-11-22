@@ -18,3 +18,6 @@
 
 # python
 *.py[cdo]
+
+# macos
+.DS_Store
