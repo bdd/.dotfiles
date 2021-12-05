@@ -1,0 +1,42 @@
+{
+    /* Additional Emacs bindings:
+     *
+     * "<key combination>" = "functionName:";
+     *
+     * Key Modifiers:
+     *   ^: ctrl
+     *   ~: option
+     *   $: shift
+     *   @: command
+     *
+     * Install to ~/Library/KeyBindings/DefaultKeyBinding.dict
+     *
+     * Functions:
+     * https://developer.apple.com/documentation/appkit/nsstandardkeybindingresponding
+     */
+
+
+    "^l"  = "centerSelectionInVisibleArea:";
+    "^/"  = "undo:";
+    "^ "  = "setMark:";
+
+    "~f" = "moveWordForward:";
+    "~b" = "moveWordBackward:";
+    "~<" = "moveToBeginningOfDocument:";
+    "~>" = "moveToEndOfDocument:";
+    "~v" = "pageUp:";
+    "~d" = "deleteWordForward:";
+    "^w" = "deleteWordBackward:";
+    "~/" = "complete:";
+    "~t" = "transposeWords:";
+
+    "^x" = {
+        "h"  = "selectAll:";
+        "k"  = "performClose:";
+        "^f" = "openDocument:";
+        "^x" = "swapWithMark:";
+        "^m" = "selectToMark:";
+        "^s" = "saveDocument:";
+        "^w" = "saveDocumentAs:";
+    };
+}
