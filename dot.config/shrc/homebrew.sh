@@ -1,17 +1,10 @@
 # shellcheck shell=bash
-[[ ${OSTYPE} =~ ^(darwin|linux) ]] || return 0
+[[ ${OSTYPE} =~ ^darwin ]] || return 0
 
 __cache_homebrew_prefix=~/.cache/homebrew-prefix
 
 _find_homebrew_install() {
-  local prefixes=("${HOME}/.brew") # non standard, homedir install
-  if [[ ${OSTYPE} =~ ^darwin ]]; then
-    prefixes+=("/usr/local")
-  elif [[ ${OSTYPE} =~ ^linux ]]; then
-    prefixes+=("/home/linuxbrew/.linuxbrew")
-  fi
-
-  local prefix
+  local prefix prefixes=("${HOME}/.brew" "/usr/local")
   for prefix in "${prefixes[@]}"; do
     local brew="${prefix}/bin/brew"
     if [[ -x ${brew} && ${prefix} == $(${brew} --prefix) ]]; then
@@ -28,7 +21,7 @@ _setup_homebrew() {
   export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar";
 
   # Update prefix cache
-  ln -sf "${HOMEBREW_PREFIX}" "${__cache_homebrew_prefix}"
+  ln -sfn "${HOMEBREW_PREFIX}" "${__cache_homebrew_prefix}"
 
   # Homebrew behavior
   export HOMEBREW_NO_ANALYTICS=1
@@ -37,19 +30,11 @@ _setup_homebrew() {
   export HOMEBREW_NO_EMOJI=1
   export HOMEBREW_NO_INSECURE_REDIRECT=1
   export HOMEBREW_NO_GITHUB_API=1
-  if [[ ${OSTYPE} =~ ^darwin ]]; then
-    export HOMEBREW_CASK_OPTS='--appdir=~/Applications'
-  fi
+
+  export HOMEBREW_CASK_OPTS='--appdir=~/Applications'
 
   # Add to PATHs
   _move_to_path_head "${HOMEBREW_PREFIX}/bin" "${HOMEBREW_PREFIX}/sbin"
-
-  # macOS will deduce man page paths from the directory of executable but
-  # Linux requires a bit more help.
-  if [[ ${OSTYPE} =~ ^linux ]]; then
-    export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"; # notice trailing colon
-    export INFOPATH="${HOMEBREW_PREFIX}/share/info${INFOPATH+:$INFOPATH}";
-  fi
 
   # Load completion files
   if [[ -n "${ZSH_VERSION-}" ]]; then
@@ -80,7 +65,7 @@ _move_to_path_head() {
 
 _brew_placeholder () {
   if [[ -n $1 && $1 == "bootstrap" ]]; then
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" 
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     return
   fi
 
