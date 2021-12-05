@@ -23,7 +23,7 @@ prompt_bdd_setup() {
 
   # One more '%' (or '#' if root) if SHLVL >= 2
   local max_shlvl=2
-  [[ -n ${TMUX} ]] && (( max_shlvl++ ))  # Tmux naturally adds to SHLVL. Compensate for that.
+  [[ -n ${TMUX} || -n ${VIM_TERMINAL} ]] && (( max_shlvl++ )) # Compensate for shells under Tmux and Vim.
   PS1+="%F{${co_highlight}}%(${max_shlvl}L.%#.)%f"  # Ternary expression: %(<n>check.true-text-false-text)
 
   # '&' if there are background jobs.
