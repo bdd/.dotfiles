@@ -58,7 +58,7 @@ ssh:restore-ssh-agent() {
 
 case "${OSTYPE}" in
   darwin*)
-    typeset -gr SC_PKCS11_PROVIDER=/usr/lib/ssh-keychain.dylib
+    declare -r SC_PKCS11_PROVIDER=/usr/lib/ssh-keychain.dylib
     ;;
 
   linux*)
@@ -70,13 +70,13 @@ case "${OSTYPE}" in
     for _dir in "${_dirs[@]}"; do
       _so="${_dir}/opensc-pkcs11.so"
       if [[ -r "${_so}" ]]; then
-        typeset -gr SC_PKCS11_PROVIDER="${_so}"
+        declare -r SC_PKCS11_PROVIDER="${_so}"
         unset _so
       fi
 
       _so="${_dir}/libtpm2_pkcs11.so"
       if [[ -r "${_so}" ]]; then
-        typeset -gr TPM_PKCS11_PROVIDER="${_so}"
+        declare -r TPM_PKCS11_PROVIDER="${_so}"
         unset _so
       fi
     done

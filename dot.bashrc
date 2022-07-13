@@ -3,12 +3,9 @@
 
 ## Options
 _shopts=(
-  autocd # like zsh
   checkhash # check hash table before path search
-  checkjobs # check running jobs when exiting interactive shell
   checkwinsize # update LINES and COLUMNS after every command
   cmdhist # save all lines of multi-line commands
-  globstar # enable '**' expansion
   histappend # append to history
   histreedit # enable re-edit failed history substitution
   huponexit # SIGHUP all jobs on exit
@@ -16,6 +13,15 @@ _shopts=(
   nullglob # allow file name patterns expanding to null
   promptvars # parameter expand in prompt string
 )
+
+if (( BASH_VERSINFO[0] > 3 )); then
+  _shopts+=( # ...
+    autocd # like zsh
+    checkjobs # check running jobs when exiting interactive shell
+    globstar # enable '**' expansion
+  )
+fi
+
 shopt -s "${_shopts[@]}"; unset _shopts
 
 ## Aliases

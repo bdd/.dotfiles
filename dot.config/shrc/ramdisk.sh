@@ -9,7 +9,7 @@ if [[ -n ${ZSH_VERSION-} ]]; then
 fi
 
 rd-attach() {
-  local rd_size=512000000 # 512M
+  local rd_size=${1:-512000000} # 512M
 
   if [[ -d "${_RAMDISK_MOUNT_POINT}" ]]; then
     if ! rmdir "${_RAMDISK_MOUNT_POINT}"; then
@@ -19,9 +19,8 @@ rd-attach() {
   fi
 
   # If we have an integer parameter take it as ramdisk size in bytes.
-  if [[ ${1:=$rd_size} =~ ^[0-9]+$ ]]; then
-    rd_size=$1
-  else # size specified in units. Use GNU numfmt to convert to bytes.
+  if ! [[ ${rd_size} =~ ^[0-9]+$ ]]; then
+    # size specified in units. Use GNU numfmt to convert to bytes.
     if hash gnumfmt 2>/dev/null; then
       rd_size=$(gnumfmt --from=auto "$1") || return 1
     else

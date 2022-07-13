@@ -26,9 +26,7 @@ extract() {
   fi
 
   case "$1" in
-    *.tgz|*.txz|*.tbz2|*.tzst)
-      ;&
-    *.tar.gz|*.tar.xz|*.tar.bz2|*.tar.zst)
+    *.tar.gz|*.tgz|*.tar.xz|*.txz|*.tar.bz2|*.tbz2|*.tar.zst|*.tzst)
       tar ${verbose} ${test:--x} -f "$1" ;;
     *.gz)
       gunzip ${verbose} ${test} "$1" ;;
