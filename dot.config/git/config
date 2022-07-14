@@ -3,13 +3,9 @@
 [user]
 	name = Berk D. Demir
 	email = bdd@mindcast.org
-[core]
-	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-	ignorecase = true
 [push]
-	default = upstream
-[color]
-	ui = auto
+	default = current
+	autoSetupRemote = true
 [alias]
 	amend = commit --amend --no-edit
 	bl = blame
@@ -19,11 +15,7 @@
 	co = checkout
 	cobm = checkout-branch-match
 	cp = cherry-pick
-
-	# History in one line per commit. Now in Technicolor!
-	# Abbrv hash, author name (16 chars), commit message (wrapped at 72 chars)
 	ol = "!git log $1 --format='%C(auto)%h %<(16,trunc)%an %w(72,0,25)%s'"
-
 	pff = pull --ff-only --no-stat
 	pr = pull --rebase
 	rbc = rebase --continue
@@ -31,15 +23,12 @@
 	root = rev-parse --show-toplevel
 	sh = show
 	st = status
-[diff]
-	renames = true
-	indentHeuristic = true
 [rebase]
-	autostash = true
+	autoStash = true
 [help]
 	autocorrect = 1
 [commit]
-	verbose = true
+	verbose = 2
 
 [include]
 	path = ~/.gitconfig.local
