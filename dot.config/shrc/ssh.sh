@@ -8,6 +8,23 @@ ssh:gpg.rc() {
   fi
 }
 
+ssh:darwin.rc() {
+  local ssh_bin="$(whence -p ssh)"
+  case "${ssh_bin}" in
+    "${HOME}/.nix-profile/bin/ssh" | /usr/local/bin/ssh | /opt/homebrew/bin/ssh)
+      ssh:restore-ssh-agent || eval "$(ssh-agent)"
+      ;;
+    /usr/bin/ssh)
+      # No FIDO2. PGP or PIV.
+      # Default to using GPG
+      ssh:gpg.rc
+      ;;
+    *)
+      echo "${ssh_bin}?"
+      ;;
+  esac
+}
+
 ssh:_set-ssh_auth_sock() {
   [[ -n $1 && -S $1 ]] || return 1
   export SSH_AUTH_SOCK="$1"
