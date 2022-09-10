@@ -23,6 +23,7 @@
 	root = rev-parse --show-toplevel
 	sh = show
 	st = status
+	sw = switch
 [rebase]
 	autoStash = true
 [help]
