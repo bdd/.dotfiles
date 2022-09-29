@@ -3,9 +3,23 @@
 [user]
 	name = Berk D. Demir
 	email = bdd@mindcast.org
+[init]
+	defaultBranch = main
+[commit]
+	verbose = 2
 [push]
 	default = current
 	autoSetupRemote = true
+[rebase]
+	autoStash = true
+[help]
+	autocorrect = 1
+[log]
+	showSignature = true
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	defaultKeyCommand = git-gpg-ssh-defaultkeycommand
 [alias]
 	amend = commit --amend --no-edit
 	bl = blame
@@ -24,12 +38,5 @@
 	sh = show
 	st = status
 	sw = switch
-[rebase]
-	autoStash = true
-[help]
-	autocorrect = 1
-[commit]
-	verbose = 2
-
 [include]
 	path = ~/.gitconfig.local
