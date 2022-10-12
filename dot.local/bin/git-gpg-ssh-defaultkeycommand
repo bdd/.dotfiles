@@ -16,7 +16,8 @@ fi
 
 if [[ -z ${IGNORE_ALLOWED_SIGNERS-} && -r ${allowed_signers} ]]; then
   for key in "${keys[@]}"; do
-    if grep -q " ${key}" ${allowed_signers}; then
+    read -r type pubkey _comment <<< "${key}"
+    if grep -q " ${type} ${pubkey}" ${allowed_signers}; then
       echo "key::${key}"
       exit
     fi
