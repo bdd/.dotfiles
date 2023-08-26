@@ -76,14 +76,17 @@ alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 # Directory
 hash -d D=~/Desktop
 hash -d d=~/Downloads
-hash -d m=/run/media/$(logname)
 hash -d c=${_xdg_config_home}
-
-# OS specific directories
-if [[ $OSTYPE =~ ^darwin ]]; then
-  hash -d a=~/Applications
-  hash -d icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs
-fi
+case "${OSTYPE}" in
+  darwin*)
+    hash -d a=~/Applications
+    hash -d icloud=~/Library/Mobile\ Documents/com\~apple\~CloudDocs
+    hash -d m=/Volumes
+    ;;
+  linux*)
+    hash -d m=/run/media/$(logname)
+    ;;
+esac
 
 ### Key Bindings
 bindkey -e # Emacs key bindings
