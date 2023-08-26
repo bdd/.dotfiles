@@ -76,6 +76,9 @@ alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 # Directory
 hash -d D=~/Desktop
 hash -d d=~/Downloads
+hash -d m=/run/media/$(logname)
+hash -d c=${_xdg_config_home}
+
 # OS specific directories
 if [[ $OSTYPE =~ ^darwin ]]; then
   hash -d a=~/Applications
