@@ -1,11 +1,10 @@
 # shellcheck shell=bash
 
-term:tmux_dcs() {
-  printf '\ePtmux;\e'; cat; printf '\e\\'
+_term:osc() {
+  printf "\e]%d;%s\a" "$1" "$2"
 }
 
-
-term:clip() {
+termclip() {
   # Copies stdin to terminal hosts's clipboard using OSC 52 escape sequences.
   #
   # Support for OSC 52 as of Dec 2019
@@ -16,6 +15,9 @@ term:clip() {
   # - hterm on Chrome OS
   #   Write access is enabled by default, read access needs to be enabled.
   #   Supports a bunch more OSC escape sequences https://chromium.googlesource.com/apps/libapps/+/master/hterm/doc/ControlSequences.md#OSC
+  #
+  # - WezTerm
+  #   https://wezfurlong.org/wezterm/escape-sequences.html#operating-system-command-sequences
 
   # /!\
   # The output of base64 has to be gapless (no space, \n, \r).
@@ -30,23 +32,27 @@ term:clip() {
     return 69 # EX_UNAVAILABLE
   fi
 
-  printf "\e]52;c;%s\a" "${b64}"
+  _term:osc 52 "c;${b64}"
 }
 
-termclip() {
-  if [[ -n "${TMUX}" ]]; then term:clip | term:tmux_dcs; else term:clip; fi
-}
-
-
-term:notif() {
+termnotif() {
   # Displays a notification on terminal.
   #
   # If exists, first argument is used as notification string, otherwise it
   # defaults to "Attention".
 
-  printf "\e]9;%s\a" "${1:-Attention}"
+  _term:osc 9 "${1:-Attention}"
 }
 
-termnotif() {
-  if [[ -n "${TMUX}" ]]; then term:notif "$@" | term:tmux_dcs; else term:notif "$@"; fi
+termtitle() {
+  _term:osc 1 "$@"
 }
+
+case "${TERM_PROGRAM}" in
+  "WezTerm")
+    alias imgcat="wezterm imgcat"
+    ;;
+  "iTerm.app")
+    alias imgcat="iterm2-imgcat"
+    ;;
+esac
