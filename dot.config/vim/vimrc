@@ -65,6 +65,7 @@ endif
 silent! packadd minpac
 if exists('g:loaded_minpac')
   command! -bar PackUpdate call minpac#update()
+  command! -bar PackUpdateQuit call minpac#update('', {'do': 'qall'})
   command! -bar PackClean call minpac#clean()
   call minpac#init()
   call minpac#add('k-takata/minpac', {'type': 'opt'})
