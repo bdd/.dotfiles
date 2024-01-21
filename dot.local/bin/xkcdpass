@@ -129,4 +129,9 @@ if [[ -v digits ]]; then
   passphrase="${ps}"
 fi
 
-echo "${passphrase}"
+if [[ -t 1 ]]; then
+  # stdout (fd 1) is a tty. echo with a new line.
+  echo "${passphrase}"
+else
+  echo -n "${passphrase}"
+fi
