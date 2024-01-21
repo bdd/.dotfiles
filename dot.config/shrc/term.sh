@@ -48,6 +48,20 @@ termtitle() {
   _term:osc 1 "$@"
 }
 
+termresize() {
+  local save
+  save=$(stty -g)
+  stty raw -echo min 0 time 5
+
+  # Like OSC (]), but CSI ([).
+  printf "\e[18t" > /dev/tty
+  # shellcheck disable=SC2141 # yes, we really want to split on 't'.
+  IFS=';t' read -r _ rows cols _ < /dev/tty
+
+  stty "${save}"
+  stty cols "${cols}" rows "${rows}"
+}
+
 case "${TERM_PROGRAM}" in
   "WezTerm")
     alias imgcat="wezterm imgcat"
