@@ -23,9 +23,9 @@ termclip() {
   # The output of base64 has to be gapless (no space, \n, \r).
   # `base64` command on Linux and some BSDs may wrap at 72 chars.
   local b64
-  if hash base64 2>/dev/null; then
+  if whence -p base64 >/dev/null; then
     b64=$(base64 | tr -d '\r\n')
-  elif hash b64encode 2>/dev/null; then
+  elif whence -p b64encode >/dev/null; then
     # For FreeBSD
     b64=$(b64encode -r - | tr -d '\r\n')
   else
