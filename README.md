@@ -3,7 +3,7 @@
 Opinions, occasional overkill, or oddly spartan looking things ahead. Buyer beware!
 
 ## XDG
-In order too keep things tidy under `$HOME`, [XDG Base Directory
+In order to keep things tidy under `$HOME`, [XDG Base Directory
 Specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is
 followed on all platforms.
 
