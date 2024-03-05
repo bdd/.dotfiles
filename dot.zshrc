@@ -71,7 +71,6 @@ alias -g CP='| termclip'
 # Command
 alias h=history
 alias dv='dirs -v' # need a shorter command to see the dirstack
-alias utc='date -u "+%Y-%m-%dT%H:%MZ"'
 
 # Directory
 hash -d D=~/Desktop
