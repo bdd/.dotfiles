@@ -35,6 +35,15 @@ ssh:restore-gpg-agent() {
     "$(gpgconf --list-dirs agent-ssh-socket)"
 }
 
+ssh:restore-keyring-agent() {
+  local s="${XDG_RUNTIME_DIR}/keyring/ssh"
+  if [[ -r ${s} ]]; then
+    ssh:_set-ssh_auth_sock "${s}"
+  else
+    return 69 # EX_UNAVAILABLE
+  fi
+}
+
 ssh:restore-ssh-agent() {
   # "Why not just use lsof instead?"
   # ssh-agent disables ptrace on all platforms[1] leading to different
@@ -48,7 +57,7 @@ ssh:restore-ssh-agent() {
 
   local s sockets=() listeners=()
   IFS=$'\n' sockets+=( \
-    $(find -E "${TMPDIR-/tmp}" -type s -uid "$(id -u)" -regex "${TMPDIR}/ssh-.[^/]+/agent\.[0-9]+" 2>/dev/null) \
+    $(find -E "${TMPDIR-/tmp}" -type s -uid "$(id -u)" -regex "${TMPDIR-/tmp}/ssh-.[^/]+/agent\.[0-9]+" 2>/dev/null) \
   )
   for s in "${sockets[@]}"; do
     # can we connect to this socket or is it a leftover?
