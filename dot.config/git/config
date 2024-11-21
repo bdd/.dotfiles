@@ -7,6 +7,8 @@
 	defaultBranch = main
 [commit]
 	verbose = 2
+[diff]
+	algorithm = histogram
 [push]
 	default = current
 	autoSetupRemote = true
@@ -16,6 +18,10 @@
 	autocorrect = 1
 [log]
 	showSignature = true
+[branch]
+	sort = -committerdate
+[column]
+	ui = auto
 [gpg]
 	format = ssh
 [gpg "ssh"]
@@ -30,6 +36,7 @@
 	cobm = checkout-branch-match
 	cp = cherry-pick
 	ol = "!git log $1 --format='%C(auto)%h %<(16,trunc)%an %w(72,0,25)%s'"
+	fpush = push --force-with-lease
 	pff = pull --ff-only --no-stat
 	pr = pull --rebase
 	rbc = rebase --continue
