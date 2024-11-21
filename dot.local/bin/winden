@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WINDEN_MBOX=mailbox.winden.app/v1
+WINDEN_RELAY=relay.winden.app:4001
+
+if [[ -z ${WORMHOLE-} ]]; then
+  WORMHOLE=(wormhole-rs wormhole)
+fi
+
+read -ra impls < <(type -p "${WORMHOLE[@]}")
+if (( ${#impls[@]} == 0 )); then
+  echo "No Magic Wormhole implementation found in PATH" >&2
+  exit 69 # EX_UNAVAILABLE
+fi
+impl=$(basename "${impls[0]}")
+
+declare -A args_for_impl=(
+  # wormhole-rs default feauture set does NOT include TLS support, hence `ws://`.
+  ["wormhole-rs"]="%s --rendezvous-server ws://${WINDEN_MBOX} --relay-server tcp://${WINDEN_RELAY}"
+  ["wormhole"]="--relay-url wss://${WINDEN_MBOX} --transit-helper tcp:${WINDEN_RELAY} %s"
+)
+
+action=${1-}
+if ! [[ ${action} =~ ^(send|receive)$ ]]; then
+  echo "winden is only for send or receive of files or dirs" >&2
+  exit 64 # EX_USAGE
+fi
+
+shift
+
+# shellcheck disable=SC2059
+printf -v args -- "${args_for_impl[${impl}]}" "${action}"
+read -ra cmdline <<< "${impl} ${args} $*"
+exec "${cmdline[@]}"
