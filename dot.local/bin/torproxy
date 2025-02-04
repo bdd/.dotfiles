@@ -1,41 +1,108 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-listening_port () {
+healthcheck() {
+  local hcurl="https://www.facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd.onion/si/proxy"
+  local curl_proxy=${1-}
+
+  if ! curl -sf -m 5 -o /dev/null -x "${curl_proxy}" \
+    --write-out "%{stderr}healthcheck via [${curl_proxy}]: %{http_code}\n" \
+    "${hcurl}"; then
+    return 69 # EX_UNAVAILABLE
+  fi
+}
+
+# tor-browser from nixpkgs preconfigures the preferences to make the
+# SOCKS proxy listen on a Unix domain socket path rather than
+# localhost TCP.
+#
+# pref: extensions.torlauncher.socks_port_use_ipc
+# https://gitlab.torproject.org/tpo/applications/wiki/-/blob/master/Environment-variables-and-related-preferences.md#tor_socks_ipc_path
+# (archived https://archive.is/ZPgKF)
+#
+# Not every application supports SOCKS proxies over Unix domain sockets.
+# socat can help:
+#  socat TCP-LISTEN:9050,fork,reuseaddr,bind=127.0.0.1,keepalive=10 UNIX-CONNECT:${XDG_RUNTIME_DIR}/Tor/socks.socket
+linux:socket() {
+  local socks sock
+
+  read -ra socks < <(find "${XDG_RUNTIME_DIR}" -perm 000 -prune -o -type s -path '*/Tor*/socks.socket' -print)
+  for sock in "${socks[@]}"; do
+    # 'socks5h' is a curl specific url scheme to resolve hostname on the proxy side.
+    # ...most other apps do this by default with a socks5 proxy.
+    curl_proxy="socks5h://localhost/${sock}"
+    if healthcheck "${curl_proxy}"; then
+      return
+    fi
+  done
+
+  return 69 # EX_UNAVAILABLE
+}
+
+darwin:lsof () {
   local cmd port
 
-  for listener in "tor 9050" "tor.real 9150"; do
+  for listener in "tor 9050" "tor.real 9150" "arti 9150"; do
     read -r cmd port <<< "${listener}"
     if lsof -lnP -a \
       -c "/^${cmd}$/" \
       -i "tcp:${port}" \
       -s tcp:listen \
       -u "${UID}" > /dev/null 2>&1; then
-      echo "${port}"
+      host="localhost"
+      curl_proxy="socks5h://${host}:${port}"
+      if healthcheck "${curl_proxy}"; then
+        echo "${port}"
+      else
+        unset host port curl_proxy
+      fi
+    fi
+  done
+
+  [[ -z ${curl_proxy} ]] || return 69
+}
+
+listener_scan() {
+  host="localhost"
+  for port in 9050 9150; do
+    curl_proxy="socks5h://${host}:${port}"
+    if healthcheck "${curl_proxy}"; then
       return
     fi
   done
+
+  return 69 # EX_UNAVAILABLE
 }
 
+if [[ ${OSTYPE} =~ linux* ]] && linux:socket; then
+  :
+elif [[ ${OSTYPE} =~ darwin* ]] && darwin:lsof; then
+  :
+else
+  listener_scan || exit 69
+fi
+
 case ${1-url} in
-  "url")
-    template="socks5://{host}:{port}" ;;
-  "hostport")
-    template="{host}:{port}" ;;
   "curl")
     # 'socks5h' is a curl specific url scheme to resolve hostname on the proxy side.
     # ...most other apps do this by default with a socks5 proxy.
-    template="-x socks5h://{host}:{port}" ;;
+    template="-x ${curl_proxy}"
+    ;;
+  "url")
+    if [[ -z "${host-}" ]]; then
+      exit 69 # EX_UNAVAILABLE
+    fi
+    template="socks5://${host}:${port}"
+    ;;
+  "hostport")
+    if [[ -z "${host-}" ]]; then
+      exit 69 # EX_UNAVAILABLE
+    fi
+    template="${host}:${port}"
+    ;;
   *)
     echo "unknown output format '$1'" >&2
-    exit 1
+    exit 64 # EX_USAGE
 esac
 
-port=$(listening_port)
-if [[ -z "${port}" ]]; then
-  exit 69 # EX_UNAVAILABLE
-fi
-
-host="127.0.0.1" # Tor(Browser) still listens on IPv4 only
-
-echo "${template}" | sed -e "s/{host}/${host}/g" -e "s/{port}/${port}/g"
+echo "${template}"
