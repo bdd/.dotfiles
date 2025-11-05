@@ -1,7 +1,13 @@
 # shellcheck shell=bash
 
 _term:osc() {
-  printf "\e]%d;%s\a" "$1" "$2"
+  local prefix="" suffix=""
+  if [[ -n "${TMUX}" ]]; then
+    prefix=$'\ePtmux;\e'
+    suffix=$'\e\\'
+  fi
+
+  printf "%s\e]%d;%s\a%s" "${prefix}" "$1" "$2" "${suffix}"
 }
 
 termclip() {
