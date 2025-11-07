@@ -45,9 +45,23 @@ termnotif() {
   # Displays a notification on terminal.
   #
   # If exists, first argument is used as notification string, otherwise it
-  # defaults to "Attention".
+  # defaults to hostname:{tty or tmux window index}.
 
-  _term:osc 9 "${1:-Attention}"
+  local msg
+
+  if [[ $# -eq 0 ]]; then
+    msg="$(hostname):"
+    if [[ -n "${TMUX}" ]]; then
+      msg+="tmux/$(tmux display-message -p -F '#{window_index}')"
+    else
+      msg+="${TTY}"
+    fi
+  else
+    msg="$1"
+  fi
+
+  _term:osc 9 "${msg}"
+  printf "\a"
 }
 
 termtitle() {
