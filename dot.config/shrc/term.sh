@@ -65,7 +65,7 @@ termnotif() {
 }
 
 termtitle() {
-  _term:osc 1 "$@"
+  _term:osc 0 "$@"
 }
 
 termresize() {
