@@ -1,66 +1,62 @@
 #!/usr/bin/env bash
+set -euo pipefail
+
 DNSLG='http://www.dns-lg.com'
-anycast_nodes="google1 google2 opendns1 opendns2 cloudflare quad9 he"
-default_nodes="google1 opendns1 cloudflare quad9 he"
+anycast_nodes=(google1 google2 opendns1 opendns2 cloudflare quad9 he)
+default_nodes=(google1 cloudflare quad9 opendns1)
 
-__usage__="Usage: $(basename "${0}") [-Aau] name [rrtype]"
+usage() {
+  echo "usage: $(basename "${0}") [-Aau] name [rrtype] ..." >&2
+  exit 64 # EX_USAGE
+}
 
+nodes=()
 OPTIND=1
 while getopts ':Aau' opt; do
   case "${opt}" in
-    A)
-      all_nodes=true
-      only_anycast_nodes=false only_unicast_nodes=false
-      ;;
     a)
-      only_anycast_nodes=true
-      only_unicast_nodes=false all_nodes=false
+      nodes+=("${anycast_nodes[@]}")
       ;;
     u)
-      only_unicast_nodes=true
-      only_anycast_nodes=false all_nodes=false
+      readarray -tO "${#nodes[@]}" nodes < <(
+        if ! { curl -sf "${DNSLG}/nodes.json" | jq -r '.nodes[].name'; }; then
+          echo "WARN: Failed to fetch unicast node list" >&2
+        fi
+      )
       ;;
     *)
       echo "Unrecognized option -${OPTARG}" >&2
-      echo "${__usage__}" >&2
-      exit 64 # EX_USAGE
+      usage
       ;;
   esac
 done
-
 shift $((OPTIND - 1))
 
-if  (($# == 0 || $# > 2)); then
-  echo "${__usage__}" >&2
-  exit 64 # EX_USAGE
-fi
+# In case no '-a' or '-u' flag passed, use the default node list.
+[[ -z ${nodes[*]} ]] && nodes=("${default_nodes[@]}")
+
+# Need a name to resolve
+[[ $1 ]] || usage
+name=$1
+shift
+
+# In case no rrtypes are passed, by default resolve IPv4 and IPv6 addrs.
+(( $# )) && rrtypes=("$@") || rrtypes=(A AAAA)
+
 if ! hash jq 2>/dev/null; then
   echo "jq: not found" >&2
   exit 69 # EX_UNAVAILABLE
 fi
-name=$1
-rrtype=${2-A}
-
-if [[ ${only_unicast_nodes} == 'true' || ${all_nodes} == 'true' ]]; then
-  unicast_nodes=$(
-    set -o pipefail;
-    curl --fail -s ${DNSLG}/nodes.json | jq -e -r '.nodes[].name' | tr '\n' ' '
-  ) || exit 69 # EX_UNAVAILABLE
-fi
-
-if ${only_anycast_nodes}; then
-  read -ra nodes <<< "${anycast_nodes}"
-elif ${only_unicast_nodes}; then
-  read -ra nodes <<< "${unicast_nodes}"
-elif ${all_nodes}; then
-  read -ra nodes <<< "${anycast_nodes} ${unicast_nodes}"
-else
-  read -ra nodes <<< "${default_nodes}"
-fi
 
 for node in "${nodes[@]}"; do
-  echo "- ${node}:"
-  curl -s "${DNSLG}/${node}/${name}/${rrtype}" \
-    | (jq -r '.answer[].rdata' 2>/dev/null || echo '[fail]') \
-    | sort -n
+  echo "> ${node}:"
+  for rrtype in "${rrtypes[@]}"; do
+    if ! {
+      curl -sf "${DNSLG}/${node}/${name}/${rrtype}" \
+        | jq -r '[.answer[].rdata] | sort[]' 2>/dev/null
+    }
+    then
+      echo "<failed>"
+    fi
+  done
 done
