@@ -1,6 +1,8 @@
 # vim: filetype=zsh
 
 prompt_bdd_setup() {
+  prompt_opts=(percent subst)
+
   local \
     co_fade=245 \
     co_error=203 \
@@ -18,6 +20,8 @@ prompt_bdd_setup() {
     echo "%F{${color}}$*%f"
   }
 
+
+
   PS1="%~"
   PS1+="$(colorize_by_os '%#')"  # cwd relative to home and '%' (or '#' if root)
 
@@ -33,11 +37,28 @@ prompt_bdd_setup() {
 
   RPROMPT="%F{${co_error}}%(?..%?)%f"  # exit status of last process is not 0
   [[ -z ${TMUX} ]] && RPROMPT+=" %F{${co_fade}}%m%f"
+  RPROMPT+='${prompt_bdd_nixos_dirty}'
 
   # Prepend parameters to PS1, separated with ':'.
   # e.g. `prompt bdd foo` results "foo:~%"
   if (($# > 0)); then
     PS1="$1:${PS1}"
+  fi
+
+  if [[ -f /etc/NIXOS ]]; then
+    autoload -Uz add-zsh-hook
+    add-zsh-hook precmd prompt_bdd_precmd
+  fi
+}
+
+prompt_bdd_precmd() {
+  local current_system=/run/current-system
+  local booting_system=/nix/var/nix/profiles/system
+
+  if ! [[ ${current_system} -ef ${booting_system} ]]; then
+    prompt_bdd_nixos_dirty=" %F{cyan}[testing]%f"
+  else
+    prompt_bdd_nixos_dirty=""
   fi
 }
 
