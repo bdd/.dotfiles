@@ -58,6 +58,9 @@ packadd! matchit
 """ comment: tpope/vim-commentary replacement
 packadd! comment
 
+""" editorconfig: https://editorconfig.org
+packadd! editorconfig
+
 """ nohlsearch: nohlsearch after &updatetime or entering insert mode
 packadd! nohlsearch
 
