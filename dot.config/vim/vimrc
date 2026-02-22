@@ -58,6 +58,10 @@ packadd! matchit
 """ nohlsearch: nohlsearch after &updatetime or entering insert mode
 packadd! nohlsearch
 
+""" osc52: Use OSC 52 to access the clipboard
+packadd osc52
+set clipmethod+=osc52
+
 """ ftplugin/man.vim: Render man pages in buffers with ':Man' command.
 runtime ftplugin/man.vim
 if exists(':Man')
