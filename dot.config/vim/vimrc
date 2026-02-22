@@ -61,6 +61,14 @@ packadd! comment
 """ editorconfig: https://editorconfig.org
 packadd! editorconfig
 
+""" helpcurwin: It's :help in the current window
+packadd! helpcurwin
+cnoreabbrev <expr> hc getcmdtype() == ":" &&
+    \ getcmdline() == 'hc' ? 'HelpCurwin' : 'hc'
+
+""" helptoc: Generate table of contents in a pop-up
+packadd! helptoc
+
 """ nohlsearch: nohlsearch after &updatetime or entering insert mode
 packadd! nohlsearch
 
