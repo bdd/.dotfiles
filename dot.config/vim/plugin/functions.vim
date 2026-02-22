@@ -10,12 +10,6 @@ function! PreferCmd(...) abort
   return printf('echoerr "None in %s is a valid command."', string(a:000))
 endfunction
 
-function! ToggleOpt(opt) abort
-  " Returns *string* 'set {opt}' or 'set no{opt}' to be executed for toggling.
-  let l:toggle = eval('&' . a:opt) ? 'no' . a:opt : a:opt
-  return 'set ' . l:toggle
-endfunction
-
 function! s:KeepWinView(...) abort
   " Window view keeper akin to 'keeppatterns'.
   " Execute passed command and restore pre-execution window view.

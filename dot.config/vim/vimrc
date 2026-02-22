@@ -55,6 +55,9 @@ set backspace=indent,eol,start  " backspace over everything
 """ matchit: Extend '%' to matching groups like 'if', 'else', 'endif'.
 packadd! matchit
 
+""" nohlsearch: nohlsearch after &updatetime or entering insert mode
+packadd! nohlsearch
+
 """ ftplugin/man.vim: Render man pages in buffers with ':Man' command.
 runtime ftplugin/man.vim
 if exists(':Man')
@@ -194,7 +197,7 @@ nnoremap \ ;
 inoremap <expr> <CR> pumvisible() ? '<C-y>' : '<CR>'
 
 nnoremap <Leader><Leader> :execute PreferCmd('Buffers', 'buffers')<CR>
-nnoremap <Leader>/ :execute ToggleOpt('hlsearch')<CR>
+nnoremap <Leader>/ <Cmd>let v:hlsearch = !v:hlsearch<CR>
 nmap <Leader>h <Plug>(noclown-echo-highlight-group-chain)
 " }}}
 
