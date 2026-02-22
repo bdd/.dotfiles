@@ -55,6 +55,9 @@ set backspace=indent,eol,start  " backspace over everything
 """ matchit: Extend '%' to matching groups like 'if', 'else', 'endif'.
 packadd! matchit
 
+""" comment: tpope/vim-commentary replacement
+packadd! comment
+
 """ nohlsearch: nohlsearch after &updatetime or entering insert mode
 packadd! nohlsearch
 
@@ -107,7 +110,6 @@ if exists('g:loaded_minpac')
   if executable('rg') | let g:ackprg = 'rg --vimgrep --smart-case' | endif
   cnoreabbrev Ack Ack!
 
-  call minpac#add('tpope/vim-commentary')
   call minpac#add('tpope/vim-eunuch')
   call minpac#add('tpope/vim-fugitive')
   call minpac#add('tpope/vim-rsi')
