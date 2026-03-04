@@ -62,9 +62,11 @@ packadd! comment
 packadd! editorconfig
 
 """ helpcurwin: It's :help in the current window
-packadd! helpcurwin
-cnoreabbrev <expr> hc getcmdtype() == ":" &&
-    \ getcmdline() == 'hc' ? 'HelpCurwin' : 'hc'
+if has('patch-9.1.1946')
+  packadd! helpcurwin
+  cnoreabbrev <expr> hc getcmdtype() == ":" &&
+      \ getcmdline() == 'hc' ? 'HelpCurwin' : 'hc'
+endif
 
 """ helptoc: Generate table of contents in a pop-up
 packadd! helptoc
@@ -73,8 +75,10 @@ packadd! helptoc
 packadd! nohlsearch
 
 """ osc52: Use OSC 52 to access the clipboard
-packadd osc52
-set clipmethod+=osc52
+if has('patch-9.1.1984')
+  packadd! osc52
+  set clipmethod+=osc52
+endif
 
 """ ftplugin/man.vim: Render man pages in buffers with ':Man' command.
 runtime ftplugin/man.vim
