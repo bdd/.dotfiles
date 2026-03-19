@@ -11,20 +11,6 @@ _term:osc() {
 }
 
 termclip() {
-  # Copies stdin to terminal hosts's clipboard using OSC 52 escape sequences.
-  #
-  # Support for OSC 52 as of Dec 2019
-  # - iTerm2 on macOS
-  #   User needs to give access to clipboard.
-  #   Only implements write access: https://github.com/gnachman/iTerm2/blob/4e55c33c9ea93f93a813da640d89c9e0fde7e3ec/sources/VT100Terminal.m#L1084
-  #
-  # - hterm on Chrome OS
-  #   Write access is enabled by default, read access needs to be enabled.
-  #   Supports a bunch more OSC escape sequences https://chromium.googlesource.com/apps/libapps/+/master/hterm/doc/ControlSequences.md#OSC
-  #
-  # - WezTerm
-  #   https://wezfurlong.org/wezterm/escape-sequences.html#operating-system-command-sequences
-
   # /!\
   # The output of base64 has to be gapless (no space, \n, \r).
   # `base64` command on Linux and some BSDs may wrap at 72 chars.
