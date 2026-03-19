@@ -76,7 +76,7 @@ packadd! nohlsearch
 
 """ osc52: Use OSC 52 to access the clipboard
 if has('patch-9.1.1984')
-  packadd! osc52
+  packadd osc52
   set clipmethod+=osc52
 endif
 
