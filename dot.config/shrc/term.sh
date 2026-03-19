@@ -69,6 +69,9 @@ termresize() {
 }
 
 case "${TERM_PROGRAM}" in
+  "ghostty")
+    alias imgcat="viu"
+    ;;
   "WezTerm")
     alias imgcat="wezterm imgcat"
     ;;
