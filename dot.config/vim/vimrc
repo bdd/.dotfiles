@@ -114,10 +114,19 @@ if exists('g:loaded_minpac')
   call minpac#add('godlygeek/tabular')
   call minpac#add('junegunn/fzf', {'do': {-> system('./install --bin')}})
   call minpac#add('junegunn/fzf.vim')
-  command! -bang -nargs=* GRg
-    \ call fzf#vim#grep(
-    \   'rg --column --line-number --no-heading --color=always --smart-case -- '.fzf#shellescape(<q-args>),
-    \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+  function! s:fzf_rg_at_git_root(q, bang)
+    let l:git_root = systemlist('git rev-parse --show-toplevel')[0]
+    let l:cmd = 'rg --column --line-number --no-heading --color=always --smart-case -- ' .. fzf#shellescape(a:q)
+    let l:has_columns = 1
+    let l:preview_opts = fzf#vim#with_preview({'dir': l:git_root})
+    call fzf#vim#grep(
+          \ l:cmd,
+          \ l:has_columns,
+          \ l:preview_opts,
+          \ a:bang
+          \ )
+  endfunction
+  command! -bang -nargs=* GRg call s:fzf_rg_at_git_root(<q-args>, <bang>0)
 
   call minpac#add('junegunn/goyo.vim')
 
