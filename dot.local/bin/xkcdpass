@@ -100,7 +100,7 @@ if [[ -v capitalize ]]; then
   passphrase=${p[*]}
 fi
 
-# "Cannot be longer than N charecters": sigh...
+# "Cannot be longer than N characters": sigh...
 # BIP39 words' first four letters unambiguously identify the word.
 # We can shorten the passphrase while preserving entropy.
 if [[ -v squeeze ]]; then
@@ -112,7 +112,7 @@ if [[ -v squeeze ]]; then
 fi
 
 # "Must include digits": use digits as word separators.
-# We want to make the digits predictable i.e. incrementing and non-ambigious
+# We want to make the digits predictable i.e. incrementing and non-ambiguous
 # when displayed under various typefaces. Do not use "0" and "1". Start from
 # "2" and count up, rotating back to "2" after "9".
 if [[ -v digits ]]; then
