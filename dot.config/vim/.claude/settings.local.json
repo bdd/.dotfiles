@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api:*)",
+      "Bash(curl -sL 'https://raw.githubusercontent.com/vim/vim/master/runtime/pack/dist/opt/comment/plugin/comment.vim')",
+      "Bash(curl -sL 'https://raw.githubusercontent.com/vim/vim/master/runtime/pack/dist/opt/nohlsearch/plugin/nohlsearch.vim')"
+    ]
+  }
+}
