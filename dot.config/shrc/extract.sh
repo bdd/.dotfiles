@@ -35,7 +35,9 @@ extract() {
     *.bz2)
       bunzip2 ${verbose} ${test} "$1" ;;
     *.zip)
-      unzip ${verbose:--q} ${test:+-l} "$1" ;;
+      _unzip=$(whence -p bsdunzip unzip | head -n 1)
+      [[ -z ${_unzip} ]] && return 69 # EX_UNAVAILABLE
+      ${_unzip} ${verbose:--q} ${test:+-l} "$1" ;;
     *.[jwe]ar)
       jar ${test:-x}${verbose:+v}f "$1" ;;
     *.Z)
