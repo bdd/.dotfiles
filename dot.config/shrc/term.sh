@@ -51,18 +51,36 @@ termtitle() {
   _term:osc 0 "$@"
 }
 
-termresize() {
+# Resizes the remote terminal to fit into viewing terminal
+#
+# Useful for direct over SSH serial console connections which tend to default
+# to 80x24.
+termfit() {
   local save
   save=$(stty -g)
-  stty raw -echo min 0 time 5
+  stty raw -echo min 0 time 10
+  #    ^^^ ^^^^^ ^^^^^ ^^^^^^^
+  #     |    |     |      \__> read timeout=10 ds (1 s)
+  #     |    |     \_________> read 0 chars: read timer starts immediately
+  #     |    \_______________> disable echo
+  #     \____________________> raw mode
 
-  # Like OSC (]), but CSI ([).
-  printf "\e[18t" > /dev/tty
-  # shellcheck disable=SC2141 # yes, we really want to split on 't'.
-  IFS=';t' read -r _ rows cols _ < /dev/tty
+  # CSI(\e[) 18t: Report Terminal Size (https://terminalguide.namepad.de/seq/csi_st-18/)
+  #     response: <CSI 8>;<rows>;<cols>t
+  printf $'\e[18t' > /dev/tty
+  local csi8 rows cols
+  IFS=';' read -r -dt csi8 rows cols < /dev/tty
+  #               ^^^ input is terminated by 't' instead of a newline.
+  # Not specifying the delim relies on tty read timeout.
+  # Examples online (and naturally, LLMs) miss this and waste time.
 
-  stty "${save}"
-  stty cols "${cols}" rows "${rows}"
+  stty "${save}" # restore
+  if [[ ${csi8} == $'\e[8' ]]; then
+    stty rows "${rows}" cols "${cols}" # fit
+  else
+    echo "Terminal didn't respond to CSI 18t as we expected." >&2
+    return 69 # EX_UNAVAILABLE
+  fi
 }
 
 case "${TERM_PROGRAM}" in
