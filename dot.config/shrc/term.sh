@@ -21,20 +21,23 @@ termclip() {
   _term:osc 52 "c;$(base64 -w 0)"
 }
 
+# Displays a notification on terminal using OSC 9
+#
+# If exists, first argument is used as notification string, otherwise it
+# defaults to hostname:{tty or tmux window index}.
 termnotif() {
-  # Displays a notification on terminal.
-  #
-  # If exists, first argument is used as notification string, otherwise it
-  # defaults to hostname:{tty or tmux window index}.
-
   local msg
 
   if [[ $# -eq 0 ]]; then
     msg="$(hostname):"
-    if [[ -n "${TMUX}" ]]; then
-      msg+="tmux/$(tmux display-message -p -F '#{window_index}')"
+    if [[ -n ${TMUX-} ]]; then
+      msg+="tmux"
+      msg+=$(
+        tmux display-message -p -F \
+          '(#{session_name})[#{window_index}:#{window_name}].#{pane_index}'
+      )
     else
-      msg+="${TTY}"
+      msg+="$(tty)"
     fi
   else
     msg="$1"
