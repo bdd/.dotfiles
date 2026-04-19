@@ -1,13 +1,18 @@
 # shellcheck shell=bash
 
+# Sends OSC escape sequences
+#
+# When running under Tmux, wraps them with passthrough sequences.
 _term:osc() {
-  local prefix="" suffix=""
-  if [[ -n "${TMUX}" ]]; then
-    prefix=$'\ePtmux;\e'
-    suffix=$'\e\\'
+  local op="$1" payload="$2"
+  local OSC=$'\e]' ST=$'\e\\'
+
+  if [[ -n ${TMUX-} ]]; then
+    OSC=$'\ePtmux;\e'${OSC}
+    ST=$'\e'${ST}${ST}
   fi
 
-  printf "%s\e]%d;%s\a%s" "${prefix}" "$1" "$2" "${suffix}"
+  printf "%s%d;%s%s" ${OSC} "${op}" "${payload}" ${ST}
 }
 
 termclip() {
