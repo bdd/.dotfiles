@@ -9,8 +9,7 @@ ssh:gpg.rc() {
 }
 
 ssh:darwin.rc() {
-  local ssh_bin="$(whence -p ssh)"
-  case "${ssh_bin}" in
+  case "$(command -v ssh)" in
     "${HOME}/.nix-profile/bin/ssh" | /usr/local/bin/ssh | /opt/homebrew/bin/ssh)
       ssh:restore-ssh-agent || eval "$(ssh-agent)"
       ;;
@@ -20,7 +19,8 @@ ssh:darwin.rc() {
       ssh:gpg.rc
       ;;
     *)
-      echo "${ssh_bin}?"
+      echo "Unknown ssh: $(command -v ssh)"
+      return 69 # EX_UNAVAILABLE
       ;;
   esac
 }
