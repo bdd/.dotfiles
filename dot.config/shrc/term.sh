@@ -15,9 +15,8 @@ _term:osc() {
   printf "%s%d;%s%s" ${OSC} "${op}" "${payload}" ${ST}
 }
 
+# Copies stdin to clipboard using OSC 52
 termclip() {
-  # Copies stdin to clipboard using OSC 52
-
   _term:osc 52 "c;$(base64 -w 0)"
 }
 
@@ -47,6 +46,7 @@ termnotif() {
   printf "\a"
 }
 
+# Sets the window title
 termtitle() {
   _term:osc 0 "$@"
 }
