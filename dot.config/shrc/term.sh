@@ -11,20 +11,9 @@ _term:osc() {
 }
 
 termclip() {
-  # /!\
-  # The output of base64 has to be gapless (no space, \n, \r).
-  # `base64` command on Linux and some BSDs may wrap at 72 chars.
-  local b64
-  if whence -p base64 >/dev/null; then
-    b64=$(base64 | tr -d '\r\n')
-  elif whence -p b64encode >/dev/null; then
-    # For FreeBSD
-    b64=$(b64encode -r - | tr -d '\r\n')
-  else
-    return 69 # EX_UNAVAILABLE
-  fi
+  # Copies stdin to clipboard using OSC 52
 
-  _term:osc 52 "c;${b64}"
+  _term:osc 52 "c;$(base64 -w 0)"
 }
 
 termnotif() {
