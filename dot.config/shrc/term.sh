@@ -1,18 +1,25 @@
 # shellcheck shell=bash
+t_ST=$'\e\\'
+t_OSC=$'\e]'
+t_CSI=$'\e['
+readonly t_ST t_OSC t_CSI
 
 # Sends OSC escape sequences
 #
 # When running under Tmux, wraps them with passthrough sequences.
 _term:osc() {
-  local op="$1" payload="$2"
-  local OSC=$'\e]' ST=$'\e\\'
+  local op=$1
+  local payload=$2
+  local seq="${t_OSC}${op};${payload}${t_ST}"
 
   if [[ -n ${TMUX-} ]]; then
-    OSC=$'\ePtmux;\e'${OSC}
-    ST=$'\e'${ST}${ST}
+    # Replace escape (sym=\e oct=033 hex=1b) with double escape in the seq.
+    local escaped_seq=${seq//$'\e'/$'\e\e'}
+    # Wrap between `\ePtmux;` and t_ST.
+    printf '\ePtmux;%s%s' "${escaped_seq}" "${t_ST}"
+  else
+    printf '%s' "${seq}"
   fi
-
-  printf "%s%d;%s%s" ${OSC} "${op}" "${payload}" ${ST}
 }
 
 # Copies stdin to clipboard using OSC 52
@@ -43,7 +50,7 @@ termnotif() {
   fi
 
   _term:osc 9 "${msg}"
-  printf "\a"
+  printf '\a'
 }
 
 # Sets the window title
@@ -65,9 +72,9 @@ termfit() {
   #     |    \_______________> disable echo
   #     \____________________> raw mode
 
-  # CSI(\e[) 18t: Report Terminal Size (https://terminalguide.namepad.de/seq/csi_st-18/)
+  # CSI 18t: Report Terminal Size (https://terminalguide.namepad.de/seq/csi_st-18/)
   #     response: <CSI 8>;<rows>;<cols>t
-  printf $'\e[18t' > /dev/tty
+  printf '%s' "${t_CSI}18t" > /dev/tty
   local csi8 rows cols
   IFS=';' read -r -dt csi8 rows cols < /dev/tty
   #               ^^^ input is terminated by 't' instead of a newline.
@@ -75,10 +82,10 @@ termfit() {
   # Examples online (and naturally, LLMs) miss this and waste time.
 
   stty "${save}" # restore
-  if [[ ${csi8} == $'\e[8' ]]; then
+  if [[ ${csi8} == ${t_CSI}8 ]]; then
     stty rows "${rows}" cols "${cols}" # fit
   else
-    echo "Terminal didn't respond to CSI 18t as we expected." >&2
+    printf "Terminal didn't respond to CSI 18t as we expected.\n" >&2
     return 69 # EX_UNAVAILABLE
   fi
 }
