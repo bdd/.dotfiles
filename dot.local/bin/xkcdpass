@@ -81,7 +81,7 @@ done
 shift $((OPTIND - 1))
 
 nwords=${1:-5} # by default generate 5 word passphrases
-if [[ -v maxlen ]]; then
+if [[ -n ${maxlen-} ]]; then
   passphrase=$(xkcdpass:maxlen "${maxlen}" "${nwords}" "${maxtries:-}")
 else
   passphrase=$(xkcdpass "${nwords}")
@@ -92,10 +92,10 @@ fi
 # passphrases for sites with these arbitrary requirements.
 
 # "Must include uppercase and lowercase letters": capitalize each word.
-if [[ -v capitalize ]]; then
+if [[ -n ${capitalize-} ]]; then
   p=()
   for word in ${passphrase}; do
-    p+=("${word^}")
+    p+=("$(printf '%s' "${word:0:1}" | tr '[:lower:]' '[:upper:]')${word:1}")
   done
   passphrase=${p[*]}
 fi
@@ -103,7 +103,7 @@ fi
 # "Cannot be longer than N characters": sigh...
 # BIP39 words' first four letters unambiguously identify the word.
 # We can shorten the passphrase while preserving entropy.
-if [[ -v squeeze ]]; then
+if [[ -n ${squeeze-} ]]; then
   p=()
   for word in ${passphrase}; do
     p+=("${word:0:4}")
@@ -115,7 +115,7 @@ fi
 # We want to make the digits predictable i.e. incrementing and non-ambiguous
 # when displayed under various typefaces. Do not use "0" and "1". Start from
 # "2" and count up, rotating back to "2" after "9".
-if [[ -v digits ]]; then
+if [[ -n ${digits-} ]]; then
   ((i = 2, word_num=1))
   ps=""
   for word in ${passphrase}; do
