@@ -1,0 +1,11 @@
+# Load the default compose file
+# NixOS: $(nix eval --raw nixpkgs#libX11.out)/share/X11/locale/en_US.UTF-8/Compose
+# Others: /usr/share/X11/locale/en_US.UTF-8/Compose
+include "%L"
+
+# Edited this file and want it re-read?
+# - Restarting the app should suffice.
+# - GNOME relies on IBus for input handling, so `ibus restart` may help without
+#   restarting the app.
+
+include "%H/.config/XCompose/greek"
