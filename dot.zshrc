@@ -50,8 +50,8 @@ _xdg_cache_home=${XDG_CACHE_HOME:-${HOME}/.cache}; mkdir -p "${_xdg_cache_home}"
 _xdg_data_home_subdir=${XDG_DATA_HOME:-${HOME}/.local/share}/zsh; mkdir -p "${_xdg_data_home_subdir}"
 
 ### zshparam(1)
-HISTSIZE=2000
-SAVEHIST=2000
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE="${_xdg_data_home_subdir}/history"
 HISTORY_IGNORE='(cd(| -| ..)|ls|pwd|bg|fg|clear|mount)'
 DIRSTACKSIZE=32              # limit number of dirs kept in stack so it doesn't get unwieldy
