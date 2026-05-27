@@ -159,6 +159,12 @@ call s:Defn('DiffText', s:bg('attention'), s:fg('background'))
 " QuickFix
 call s:Defn('qfFileName', s:fg('fade'))
 
+" Lsp
+call s:Link('LspDiagVirtualTextHint', 'Comment')
+call s:Defn('LspDiagVirtualTextInfo', s:fg('highlight'), s:attr('italic'))
+call s:Defn('LspDiagVirtualTextWarning', s:fg('attention'), s:attr('italic'))
+call s:Defn('LspDiagVirtualTextError', s:fg('error'), s:attr('italic'))
+
 """"
 """ Unmodified groups from default group names list.
 """ They retain their colorscheme from Vim's defaults.
