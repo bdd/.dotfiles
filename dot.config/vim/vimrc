@@ -75,11 +75,6 @@ call PackAddBuiltin('helptoc', 'patch-9.1.0831')
 """ nohlsearch: nohlsearch after &updatetime or entering insert mode
 call PackAddBuiltin('nohlsearch', 'patch-9.1.0497')
 
-""" osc52: Use OSC 52 to access the clipboard
-if PackAddBuiltin('osc52', 'patch-9.1.1984', 'nobang')
-  set clipmethod+=osc52
-endif
-
 """ ftplugin/man.vim: Render man pages in buffers with ':Man' command.
 runtime ftplugin/man.vim
 if exists(':Man')
