@@ -52,56 +52,32 @@ set backspace=indent,eol,start  " backspace over everything
 
 " Plugins {{{
 "" Distributed with Vim
-let s:missing_builtin_plugins = []
+runtime! plugin/compat.vim
 
 """ matchit: Extend '%' to matching groups like 'if', 'else', 'endif'.
 packadd! matchit
 
 """ comment: tpope/vim-commentary replacement
-if has('patch-9.1.0375')
-  packadd! comment
-else
-  call add(s:missing_builtin_plugins, 'comment')
-endif
+call PackAddBuiltin('comment', 'patch-9.1.0375')
 
 """ editorconfig: https://editorconfig.org
 packadd! editorconfig
 
 """ helpcurwin: It's :help in the current window
-if has('patch-9.1.1946')
-  packadd! helpcurwin
+if PackAddBuiltin('helpcurwin', 'patch-9.1.1946')
   cnoreabbrev <expr> hc getcmdtype() == ":" &&
       \ getcmdline() == 'hc' ? 'HelpCurwin' : 'hc'
-else
-  call add(s:missing_builtin_plugins, 'helpcurwin')
 endif
 
 """ helptoc: Generate table of contents in a pop-up
-if has('patch-9.1.0831')
-  packadd! helptoc
-else
-  call add(s:missing_builtin_plugins, 'helptoc')
-endif
+call PackAddBuiltin('helptoc', 'patch-9.1.0831')
 
 """ nohlsearch: nohlsearch after &updatetime or entering insert mode
-if has('patch-9.1.0497')
-  packadd! nohlsearch
-else
-  call add(s:missing_builtin_plugins, 'nohlsearch')
-endif
+call PackAddBuiltin('nohlsearch', 'patch-9.1.0497')
 
 """ osc52: Use OSC 52 to access the clipboard
-if has('patch-9.1.1984')
-  packadd osc52
+if PackAddBuiltin('osc52', 'patch-9.1.1984', 'nobang')
   set clipmethod+=osc52
-else
-  call add(s:missing_builtin_plugins, 'osc52')
-endif
-
-if !empty(s:missing_builtin_plugins)
-  autocmd VimEnter * ++once echohl WarningMsg
-      \ | echon 'Missing: ' .. join(s:missing_builtin_plugins, ', ')
-      \ | echohl None
 endif
 
 """ ftplugin/man.vim: Render man pages in buffers with ':Man' command.
