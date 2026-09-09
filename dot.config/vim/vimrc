@@ -6,6 +6,18 @@ set ttyfast       " assume fast terminal and send more chars for smooth redraw
 set lazyredraw    " don't redraw while executing macros, register and cmds
 set mouse=a       " enable mouse in all modes (=a)
 set ttymouse=sgr  " like xterm2 but supporting beyond 223 columns
+
+" Handle true color (aka 24-bit RGB, 16M color) terminals like 'tmux-direct'
+if &t_Co == 1 << 24
+  if has('termguicolors')
+    set termguicolors
+  else
+    " Even though terminal has true color, vim got compiled without
+    " '+termguicolors'.
+    " Force 256 colors.
+    set t_Co=256
+  endif
+endif
 " }}}
 
 " Look & Feel {{{
@@ -74,6 +86,11 @@ call PackAddBuiltin('helptoc', 'patch-9.1.0831')
 
 """ nohlsearch: nohlsearch after &updatetime or entering insert mode
 call PackAddBuiltin('nohlsearch', 'patch-9.1.0497')
+
+if PackAddBuiltin('osc52', 'patch-9.1.1984', '!')
+  set clipmethod^=osc52
+endif
+
 
 """ ftplugin/man.vim: Render man pages in buffers with ':Man' command.
 runtime ftplugin/man.vim
