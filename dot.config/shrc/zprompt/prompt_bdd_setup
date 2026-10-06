@@ -37,7 +37,7 @@ prompt_bdd_setup() {
 
   RPROMPT="%F{${co_error}}%(?..%?)%f"  # exit status of last process is not 0
   [[ -z ${TMUX} ]] && RPROMPT+=" %F{${co_fade}}%m%f"
-  RPROMPT+='${prompt_bdd_nixos_dirty}'
+  RPROMPT+='${prompt_bdd_nixos_cursys-}'
 
   # Prepend parameters to PS1, separated with ':'.
   # e.g. `prompt bdd foo` results "foo:~%"
@@ -56,9 +56,15 @@ prompt_bdd_precmd() {
   local booting_system=/nix/var/nix/profiles/system
 
   if ! [[ ${current_system} -ef ${booting_system} ]]; then
-    prompt_bdd_nixos_dirty=" %F{cyan}[testing]%f"
-  else
-    prompt_bdd_nixos_dirty=""
+    local parts gen label
+    for gen in /nix/var/nix/profiles/system-*-link; do
+      if [[ ${current_system} -ef ${gen} ]]; then
+        parts=(${(s:-:)gen})
+        label="Gen ${parts[-2]}"
+      fi
+    done
+
+    prompt_bdd_nixos_cursys=" %F{cyan}[${label:-testing}]%f"
   fi
 }
 
