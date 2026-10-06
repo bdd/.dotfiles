@@ -87,6 +87,7 @@ autocmd User LspAttached {
   nnoremap <buffer> <silent> <leader>rn <cmd>LspRename<cr>
   nnoremap <buffer> <silent> <leader>ca <cmd>LspCodeAction<cr>
   nnoremap <buffer> <silent> <leader>rr <cmd>LspShowReferences<cr>
+  nnoremap <buffer> <silent> <leader>lh <cmd>LspDiag highlight toggle<cr>
 }
 
 autocmd User LspDetached {
